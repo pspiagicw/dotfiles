@@ -1,0 +1,10 @@
+super + Return:
+	start-terminal.sh
+super + r:
+	start-menu.sh
+super + ctrl + l:
+	start-lock.sh
+XF86MonBrightnessDown:
+	decrease-brightness.sh
+XF86MonBrightnessUp:
+	increase-brightness.sh

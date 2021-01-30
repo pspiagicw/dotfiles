@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu>
+
+<menu id="1" label="Development">
+	<item label="GDB">
+		<action name="Execute">
+			<command>alacritty -e gdb</command>
+		</action>
+	</item>
+	<item label="Geany">
+		<action name="Execute">
+			<command>geany</command>
+		</action>
+	</item>
+	<item label="IDLE (Python IDE)">
+		<action name="Execute">
+			<command>idle</command>
+		</action>
+	</item>
+	<item label="Python">
+		<action name="Execute">
+			<command>alacritty -e python</command>
+		</action>
+	</item>
+</menu>
+<menu id="2" label="Editors">
+	<item label="Nano">
+		<action name="Execute">
+			<command>alacritty -e nano</command>
+		</action>
+	</item>
+	<item label="Neovim">
+		<action name="Execute">
+			<command>alacritty -e nvim</command>
+		</action>
+	</item>
+</menu>
+<menu id="7" label="Multimedia">
+	<item label="Image Viewer">
+		<action name="Execute">
+			<command>gpicview</command>
+		</action>
+	</item>
+	<item label="MPV">
+		<action name="Execute">
+			<command>mpv</command>
+		</action>
+	</item>
+</menu>
+<menu id="5" label="Network">
+	<item label="FireFox">
+		<action name="Execute">
+			<command>firefox</command>
+		</action>
+	</item>
+	<item label="Transmission">
+		<action name="Execute">
+			<command>transmission-gtk</command>
+		</action>
+	</item>
+</menu>
+<menu id="3" label="Office">
+	<item label="Zathura">
+		<action name="Execute">
+			<command>zathura</command>
+		</action>
+	</item>
+	<item label="Microsoft Teams - Preview">
+		<action name="Execute">
+			<command>teams</command>
+		</action>
+	</item>
+	<item label="Oracle VM VirtualBox">
+		<action name="Execute">
+			<command>VirtualBox</command>
+		</action>
+	</item>
+	<item label="Thunderbird">
+		<action name="Execute">
+			<command>thunderbird</command>
+		</action>
+	</item>
+</menu>
+<menu id="new menu 2" label="File Manager">
+	<item label="PCManFM">
+		<action name="Execute">
+			<command>pcmanfm</command>
+		</action>
+	</item>
+</menu>
+<menu id="37" label="System">
+	<item label="GParted">
+		<action name="Execute">
+			<command>gparted</command>
+		</action>
+	</item>
+	<item label="Task Manager">
+		<action name="Execute">
+			<command>lxtask</command>
+		</action>
+	</item>
+	<menu id="new menu 1" label="Settings">
+		<item label="Add/Remove Software">
+			<action name="Execute">
+				<command>pamac-manager</command>
+			</action>
+		</item>
+		<item label="Customize Look and Feel">
+			<action name="Execute">
+				<command>lxappearance</command>
+			</action>
+		</item>
+		<item label="Advanced Network Configuration">
+			<action name="Execute">
+				<command>nm-connection-editor</command>
+			</action>
+		</item>
+		<item label="Bluetooth Adapters">
+			<action name="Execute">
+				<command>blueman-adapters</command>
+			</action>
+		</item>
+		<item label="Openbox Configuration Manager">
+			<action name="Execute">
+				<command>obconf</command>
+			</action>
+		</item>
+		<item label="Tint2 Settings">
+			<action name="Execute">
+				<command>tint2conf</command>
+			</action>
+		</item>
+		<item label="Preferred Applications">
+			<action name="Execute">
+				<command>libfm-pref-apps</command>
+			</action>
+		</item>
+		<item label="Bluetooth Manager">
+			<action name="Execute">
+				<command>blueman-manager</command>
+			</action>
+		</item>
+		<item label="Wallpaper Settings">
+			<action name="Execute">
+				<command>nitrogen</command>
+			</action>
+		</item>
+		<item label="Firewall Configuration">
+			<action name="Execute">
+				<command>gufw</command>
+			</action>
+		</item>
+		<item label="LightDM GTK+ Greeter settings">
+			<action name="Execute">
+				<command>lightdm-gtk-greeter-settings-pkexec</command>
+			</action>
+		</item>
+	</menu>
+</menu>
+<menu id="40" label="OpenBox">
+	<menu id="client-list-menu"/>
+	<item label="Reconfigure">
+		<action name="Reconfigure"/>
+	</item>
+	<separator/>
+	<item label="Exit">
+		<action name="Exit"/>
+	</item>
+</menu>
+
+<menu id="root-menu" label="Openbox 3">
+	<menu id="1"/>
+	<menu id="2"/>
+	<menu id="7"/>
+	<menu id="5"/>
+	<menu id="3"/>
+	<item label="Alacritty">
+		<action name="Execute">
+			<command>alacritty</command>
+		</action>
+	</item>
+	<menu id="new menu 2"/>
+	<menu id="37"/>
+	<separator/>
+	<menu id="40"/>
+</menu>
+
+</openbox_menu>
