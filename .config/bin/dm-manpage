@@ -1,0 +1,5 @@
+#!/bin/sh
+# Dmenu prompt to easily search for a man page to open
+
+choice=`apropos --long "$1" | dmenu -i -l 10 | awk '{print $2, $1}' | tr -d '()'`
+alacritty -e man $choice

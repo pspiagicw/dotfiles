@@ -1,0 +1,109 @@
+#!/bin/bash
+
+RAM_SIZE=4096
+PCORES=4
+HARDDISK_SIZE=12288
+HARDDISK_TYPE='VDI'
+VIRTUALBOX_LOCATION="/home/pspiagicw/.VirtualBox"
+ISO_DIR="/home/pspiagicw/downloads"
+# echo ${choices[*]}
+
+startvm() {
+    if [[ $(vboxmanage list vms) = "" ]];
+    then
+	notify-send "Oracle VirtualBox" "No VM's Created!"
+    else
+	vmchoice=`vboxmanage list vms | dmenu -i -l 10 -p "Choose VM (start)"`
+	vboxmanage startvm $(echo $vmchoice | awk '{ print $NF }')
+	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} started"
+    fi
+}
+poweroffvm() {
+    if [[ $(vboxmanage list runningvms) = "" ]];
+    then
+	notify-send "Oracle Virtualbox" "No Running VM's!"
+    else
+	vmchoice=`vboxmanage list runningvms | dmenu -i -l 10 -p "Choose VM (poweroff)"`
+	vboxmanage controlvm $(echo $vmchoice | awk '{ print $NF }') poweroff
+	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} poweroff"
+    fi
+}
+# managevm() {
+#     vmchoice=`vboxmanage list vms | dmenu -i -l 10 -p "Choose VM (manage)"`
+# }
+createvm() {
+    vboxname=`echo '' | dmenu -i -p "Name of VM:"`
+    vboxtype=`vboxmanage list ostypes | grep ^ID | awk '{ print $2 }'|dmenu -i -l 10 -p "Type of OS"`
+    ramsize=`echo '' | dmenu -i -p "RAM Size in MB (Max ${RAM_SIZE}GB)"`
+    processor=`echo '' | dmenu -i -p "No of cores(Max ${PCORES})"`
+    isopath=`zenity --file-selection`
+    isopath="$ISO_DIR/$isopath"
+    VBoxManage createhd --filename $vboxname.vdi --size 80000
+    VBoxManage createvm --name $vboxname --ostype $vboxtype --register
+    VBoxManage storagectl $vboxname --name "SATA Controller" --add sata \
+	    --controller IntelAHCI
+    VBoxManage storageattach $vboxname --storagectl "SATA Controller" --port 0 \
+	    --device 0 --type hdd --medium $vboxname.vdi
+    VBoxManage storagectl $vboxname --name "IDE Controller" --add ide
+    VBoxManage storageattach $vboxname --storagectl "IDE Controller" --port 0 \
+	    --device 0 --type dvddrive --medium $isopath 
+    VBoxManage modifyvm $vboxname --ioapic on
+    VBoxManage modifyvm $vboxname --boot1 dvd --boot2 disk --boot3 none --boot4 none
+    VBoxManage modifyvm $vboxname --memory $ramsize --vram 128 --cpus $processor
+    uefi=`echo '' | dmenu -p "UEFI?(y/n):"`
+    if [[ "${uefi,,}" = "y" ]];
+    then
+	VBoxManage modifyvm $vboxname --firmware efi
+    fi
+    notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} created!"
+}
+deletevm() {
+    vmchoice=`vboxmanage list vms | dmenu -l 10 -p "Choose VM (delete):"| awk '{ print $NF }'`
+    delete=`echo '' | dmenu -p "Delete Data(y/n):"`
+    OPTIONS=""
+    if [[ "${delete,,}" = "y" ]];
+    then
+	OPTIONS="--delete"
+    fi
+    vboxmanage unregistervm $vmchoice $OPTIONS
+}
+
+# attachiso() {
+#     # echo "Vboxname $1"
+#     pathofiso=`echo '' | dmenu -p "Path of ISO:"`
+# }
+saverunningvm() {
+    if [[ $(vboxmanage list runningvms) = "" ]];
+    then
+	notify-send "Oracle Virtualbox" "No Running VM's!"
+    else
+	vmchoice=`vboxmanage list runningvms | dmenu -i -l 10 -p "Choose VM (save running)"`
+	vboxmanage controlvm $(echo $vmchoice | awk '{ print $NF }') savestate
+	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} poweroff"
+    fi
+}
+
+main() {
+    pushd $VIRTUALBOX_LOCATION
+    choices=("StartVM" "PoweroffVM" "CreateVM" "DeleteVM" "SaveRunningVM" "ManageVM" "Quit")
+    choice=`echo ${choices[*]} | tr ' ' '\n' | dmenu -i -p "Choose Action"`
+
+    if [[ "$choice" = ${choices[0]} ]];
+    then
+	startvm
+    elif [[ "$choice" = ${choices[1]} ]];
+    then
+	poweroffvm
+    elif [[ "$choice" = ${choices[2]} ]];
+    then
+	createvm
+    elif [[ "$choice" = ${choices[3]} ]];
+    then
+	deletevm
+    elif [[ "$choice" = ${choices[4]} ]];
+    then
+	saverunningvm
+    fi
+    popd
+}
+main

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+choices=$( echo -e "sink\nmute\nvolume" | dmenu -i -p "Choose")
+
+mutefunc() {
+    source=$(pulsemixer --list-sinks | grep input | dmenu -i -l 3 -p "Choose App" | awk '{ print $4 }' | sed 's/,//')
+    echo $source
+    pulsemixer --id $source --toggle-mute
+
+}
+volumefunc() {
+    source=$(pulsemixer --list-sinks | grep input | dmenu -i -l 3 -p "Choose App" | awk '{ print $4 }' | sed 's/,//')
+    volume=$(echo -e "" | dmenu -i -p "Volume Level?")
+    pulsemixer --id $source --set-volume $volume
+}
+sinkfunc() {
+    pactl -- set-default-sink $(pactl list sinks | grep Name | awk '{ print $2 }' | dmenu -i -p "Choose Sink")
+}
+case "$choices" in
+    mute) mutefunc ;;
+    volume) volumefunc ;;
+    sink) sinkfunc ;;
+    
+esac

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+
+freq=`cat /proc/cpuinfo | grep MHz | awk '{ s+=$4 } END { print substr(s/8000,1,3) }'`
+intfreq=${freq:0:1}
+if [ $intfreq -le 1 ]
+then
+    echo "<fc=#50fa7b>${freq}GHz</fc>"
+elif [ $intfreq -gt 1 ] && [ $intfreq -le 3 ]
+then
+    echo "<fc=#ffb86c>${freq}Ghz</fc>"
+else
+    echo "<fc=#ff5555>${freq}GHz</fc>GHz"
+fi

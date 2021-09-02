@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+#
+# Script name: dm-confedit
+# Description: Choose from a list of configuration files to edit.
+# Dependencies: dmenu, emacsclient
+# GitLab: https://www.gitlab.com/dwt1/dmscripts
+# License: https://www.gitlab.com/dwt1/dmscripts/LICENSE
+# Contributors: Derek Taylor
+#               Simon Ingelsson
+#               HostGrady
+
+# Set with the flags "-e", "-u","-o pipefail" cause the script to fail
+# if certain things happen, which is a good thing.  Otherwise, we can
+# get hidden bugs that are hard to discover.
+set -euo pipefail
+_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && cd "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo ".")")" && pwd)"
+if [[  -f "${_path}/_dm-helper.sh" ]]; then
+  # shellcheck disable=SC1090,SC1091
+  source "${_path}/_dm-helper.sh"
+else
+  # shellcheck disable=SC1090
+  echo "No helper-script found"
+fi
+declare -A confedit_list
+confedit_list[confedit]="$HOME/.config/bin/dm-confedit"
+confedit_list[alacritty]="$HOME/.config/alacritty/alacritty.yml"
+confedit_list[bash]="$HOME/.bashrc"
+confedit_list[emacs]="$HOME/.config/emacs/init.el"
+confedit_list[dunst]="$HOME/.config/dunst/dunstrc"
+confedit_list[ncmpcpp]="$HOME/.config/ncmpcpp/config"
+confedit_list[neovim]="$HOME/.config/nvim/init.vim"
+confedit_list[picom]="$HOME/.config/picom/picom.conf"
+confedit_list[qutebrowser bookmarks]="$HOME/.config/qutebrowser/bookmarks/urls"
+confedit_list[qutebrowser quickmarks]="$HOME/.config/qutebrowser/quickmarks"
+confedit_list[qutebrowser config.py]="$HOME/.config/qutebrowser/config.py"
+confedit_list[xmobar]="$HOME/.config/xmobar/xmobarrc"
+confedit_list[xmonad]="$HOME/.xmonad/xmonad.hs"
+confedit_list[xinitrc]="$HOME/.xinitrc"
+confedit_list[dmenu]="$HOME/.config/dmenu/config.def.h"
+confedit_list[neomutt]="$HOME/.config/neomutt/neomuttrc"
+confedit_list[slock]="$HOME/.config/slock/config.def.h"
+confedit_list[slock]="$HOME/.config/slock/config.def.h"
+confedit_list[neomutt]="$HOME/.config/neomutt/neomuttrc"
+# script will not hit this if there is no config-file to load
+# shellcheck disable=SC1090
+confedit_editor='emacsclient -c '
+
+main() {
+  # Clean options array making sure that the files exist
+  declare -A _clean_list
+  # As this is loaded from other file it is technically not defined
+  # shellcheck disable=SC2154
+  for i in "${!confedit_list[@]}"; do
+    [[ -f ${confedit_list["${i}"]} ]] && _clean_list["${i}"]=${confedit_list["${i}"]}
+  done
+
+  # Piping the above array (cleaned) into dmenu.
+  # We use "printf '%s\n'" to format the array one item to a line.
+  choice=$(printf '%s\n' "${!_clean_list[@]}" | sort | dmenu -i -l 20 -p 'Edit config:' "$@")
+
+  # What to do when/if we choose a file to edit.
+  if [ "$choice" ]; then
+    cfg=$(printf '%s\n' "${_clean_list["${choice}"]}")
+    # shellcheck disable=SC2154
+    $confedit_editor "$cfg"
+  # What to do if we just escape without choosing anything.
+  else
+      echo "Program terminated." && exit 0
+  fi
+}
+
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && main "$@"

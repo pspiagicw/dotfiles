@@ -1,0 +1,42 @@
+#!/bin/sh
+
+
+DMENU='dmenu -i'
+choice=$(echo -e "status\nbackward\nforward\nnext\nprev\ntoggle\nupdate\nclear\nplaylist\nfind\nvisualizer\nconsume\nrandom\nrepeat\nsingle" | $DMENU )
+
+playlistfunc() {
+    playlist="$(mpc lsplaylists | ${DMENU} -i -l 10 -p "Your playlists")" || exit 1
+    mpc -q clear
+    mpc load "$playlist"
+    mpc -q play 1
+}
+findfunc() {
+    mpc crop > /dev/null 2>&1
+    music="$(mpc listall | ${DMENU} -i -l 10 -p "Music to play")" || exit 1
+    mpc -q add "$music"
+    mpc del 0 > /dev/null 2>&1
+    mpc play
+    mpc repeat on
+}
+
+showfunc() {
+    notify-send --urgency=normal "MPD" "$(mpc)"
+}
+    
+case "$choice" in
+next) mpc next ;;
+prev) mpc prev ;;
+toggle) mpc toggle ;;
+update) mpc update ;;
+clear) mpc clear ;;
+playlist) playlistfunc ;;
+find) findfunc ;;
+visualizer) alacritty -e ncmpcpp --screen=visualizer ;;
+consume) mpc consume ; showfunc ;;
+random) mpc random ; showfunc ;;
+repeat) mpc repeat ; showfunc ;;
+single) mpc single ; showfunc ;;
+forward) mpc seekthrough +00:00:10 ;;
+backward) mpc seekthrough -00:00:10 ;;
+status) showfunc ;;
+esac

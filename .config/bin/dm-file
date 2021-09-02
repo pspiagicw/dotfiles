@@ -1,0 +1,30 @@
+#!/bin/sh
+# TODO: multisel
+
+target="$1"
+[ -z "$target" ] && target="$(realpath .)"
+prompt="$2"
+
+while true; do
+	p="$prompt"
+	[ -z "$p" ] && p="$target"
+	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -i -p "$p" -l 25)"
+	ec=$?
+	[ "$ec" -ne 0 ] && exit $ec
+
+	c="$(echo "$sel" |cut -b1)"
+	if [ "$c" = "/" ]; then
+		newt="$sel"
+	else
+		newt="$(realpath "${target}/${sel}")"
+	fi
+
+	if [ -e "$newt" ]; then
+		target="$newt"
+		if [ ! -d "$target" ]; then
+			echo "$target" | xargs mimi
+			exit 0
+		fi
+	fi
+done
+# xdg-open "$(find -type f -not -path '*/\.*'  -not -path './downloads/*' -not -path './music/*' -not -path './code/games/*'| dmenu -i -l 10 -p "Choose Files" )"

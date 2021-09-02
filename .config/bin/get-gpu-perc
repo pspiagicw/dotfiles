@@ -1,0 +1,13 @@
+#!/bin/sh
+perc=`nvidia-smi | grep Default | awk '{ print $13 }'`
+intperc=${perc::-1}
+if [ $intperc -le 40 ]
+then
+    echo "<fc=#50fa7b>$perc</fc>"
+elif [ $intperc -gt 40 ] && [ $intperc -le 80 ]
+then
+    echo "<fc=#ffb86c>$perc</fc>"
+else
+    echo "<fc=#ff5555>$perc</fc>"
+fi
+# echo $perc

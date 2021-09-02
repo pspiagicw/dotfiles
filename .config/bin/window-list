@@ -1,0 +1,3 @@
+#!/bin/sh
+list=`xprop -root _NET_CLIENT_LIST | pcregrep -o1 '# (.*)' | sed 's/, /\n/g' | xargs -I{} -n1 xprop -id {} WM_CLASS | awk '{ print $3 }' | awk -F\" '{ print $2 }'`
+echo "$(echo $list | sed 's/\ /\ |\ /g')"

@@ -1,0 +1,65 @@
+#!/bin/bash
+
+primary=eDP1
+secondary=HDMI-1-0
+
+mode=$(dmenu -i -p "Project Mode: "<< EOM
+extend
+mirror
+off
+reset
+second only
+set mode
+EOM
+)
+
+function extend
+{
+
+    direction=$(dmenu -i -p "Direction Mode: " << EOM
+right-of
+left-of
+above
+below
+EOM
+)
+    exec xrandr --output $secondary --auto --$direction $primary
+
+}
+
+function xmode
+{
+    disp=$(dmenu -i -p "Display: " << EOM
+$primary
+$secondary
+EOM
+)
+    xmode=$(dmenu -i -p "Xrandr Mode:" << EOM
+EOM
+)
+    xrandr --output $disp --mode $xmode
+}
+
+if [ "$mode" = "extend" ]
+then
+    extend
+elif [ "$mode" = "mirror" ]
+then
+    exec xrandr --output $secondary --auto --same-as $primary
+elif [ "$mode" = "reset" ]
+then
+    xrandr --output $primary --auto
+    xrandr --output $secondary --off
+elif [ "$mode" = "second only" ]
+then
+    xrandr --output $secondary --auto
+    xrandr --output $primary --off
+elif [ "$mode" = "off" ]
+then
+    exec xrandr --output $secondary --off 
+elif [ "$mode" = "set mode" ]
+then
+    xmode
+fi
+
+exit

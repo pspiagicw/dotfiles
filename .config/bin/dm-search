@@ -1,0 +1,4 @@
+#!/bin/sh
+
+query=`echo '' | dmenu -p "Query? " | tr ' ' '+'`
+echo "https://duckduckgo.com/?q=${query}" | xargs qutebrowser

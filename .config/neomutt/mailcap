@@ -1,0 +1,5 @@
+# qutebrowser as default browser
+text/html;    	 qutebrowser %s
+image/*;	 feh %s;
+video/*;	 mpv %s; 
+application/pdf; zathura %s 1>/dev/null;

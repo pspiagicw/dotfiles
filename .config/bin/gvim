@@ -1,0 +1,4 @@
+#!/bin/sh
+
+file="$2"
+emacsclient -c $file

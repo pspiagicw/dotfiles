@@ -1,0 +1,40 @@
+Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , borderColor = "#bd93f9"
+       , bgColor = "#282a36"
+       , fgColor = "#f8f2f2"
+       , borderWidth = 0
+       , border = BottomB
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/pspiagicw/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#ffb86c","--high","#ff5555","--low","#50fa7b","--template","<fc=#ffb86c>CPU</fc>: <total>%"] 10
+                    , Run Memory ["--template","<fc=#50fa7b>MEM</fc>: <usedratio>%","-L","3","-H","50","--low","#50fa7b","--normal","#ffb86c","--high","#ff5555"] 10
+                    , Run Date "<fc=#ff79c6>%H:%M</fc>" "date" 10
+                    , Run Battery ["--template","<fc=#bd93f9>BAT: </fc><left>%","-L","15","-H","70","--low","#ff5555","--normal","#ffb86c","--high","#50fa7b"] 60
+		    , Run MPD ["-t","<fc=#ff79c6>MPD:</fc> <fc=#ffb86c><title> (<state>)</fc>"] 10
+                    , Run Com "uname" ["-r"] "uname" 0
+                    , Run UnsafeStdinReader
+                    , Run Com "wifi-name" [] "wifi" 10
+                    , Run ComX "get-volume-percent" [] "--MUTE--" "volume" 5
+                    , Run ComX "wifi-strength" [] "--" "wifi_strength" 600
+                    , Run Com "get-cpu-temp" [] "cpu_temp" 30
+                    , Run Com "get-cpu-freq" [] "cpu_freq" 60
+		    , Run Com "brightness-level" [] "brightness_level" 60
+		    , Run Com "get-gpu-perc" [] "gpu_perc" 20
+		    , Run Com "get-gpu-mem" [] "gpu_mem" 20
+		    , Run Com "get-gpu-temp" [] "gpu_temp" 30
+		    , Run MarqueePipeReader "/tmp/testpipe" (10, 7, "+") "mpipe"
+		    , Run Swap ["--template","<fc=#ff79c6>SWP</fc>: <usedratio>%","-L","15","-H","70","--low","#50fa7b","--normal","#ffb86c","--high","#ff5555"] 60
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<action=dmenu_run><icon=haskell_20.xpm/></action> | %UnsafeStdinReader% }{ <box type=Bottom color=#ff79c6><action=`alacritty -e ncmpcpp`>%mpd%</action></box> | <box type=Bottom  color=#bd93f9> <action=`alacritty -e pulsemixer`><fc=#bd93f9>VOL: %volume%</fc></action></box> | <box type=Bottom color=#50fa7b> <action=`alacritty -e nmtui`><fc=#ffb86c> WIFI: <fc=#50fa7b>%wifi%</fc> </fc></action></box> | <box type=Bottom color=#ffb86c><action=`alacritty -e top`>%cpu%(%cpu_temp%) @ %cpu_freq% </action></box>| <box type=Bottom color=#ff5555><fc=#ff5555>GPU:</fc> %gpu_perc% (%gpu_temp%)</box> | <box type=Bottom color=#8be9fd>%memory%/%swap%/<fc=#ff79c6>GPU: </fc>%gpu_mem%</box> | <box type=Bottom color=#f1fa8b>%battery% | %date% </box>"
+       }

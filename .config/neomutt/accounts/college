@@ -1,0 +1,22 @@
+unmailboxes *
+set realname="Pratham"
+set from="pratham.sandeep2020@vitbhopal.ac.in"
+source "gpg -dq ~/.config/neomutt/college-passphrase.gpg |"
+
+set smtp_url = "smtp://pratham.sandeep2020@vitbhopal.ac.in@smtp.gmail.com:587"
+set smtp_pass=$my_pass
+set imap_user="pratham.sandeep2020@vitbhopal.ac.in"
+set imap_pass=$my_pass
+set imap_keepalive = 900	#
+set folder = "imaps://pratham.sandeep2020@vitbhopal.ac.in@imap.gmail.com:993"
+set spoolfile = "+INBOX"
+set postponed = "+[Gmail]/Drafts"
+set record = "+[Gmail]/Sent Mail"
+set trash = "+[Gmail]/Trash"
+
+unset imap_passive
+
+set imap_keepalive = 300
+
+
+account-hook $folder "set imap_pass=$my_pass"

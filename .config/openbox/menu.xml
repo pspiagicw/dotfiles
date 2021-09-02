@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+
+<menu id="apps-accessories-menu" label="Accessories">
+  <item label="Cava">
+    <action name="Execute">
+      <command>alacritty -e cava</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>Cava</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-editors-menu" label="Editors">
+  <item label="Emacs">
+    <action name="Execute">
+      <command>emacsclient -c</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>Emacs</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Nano">
+    <action name="Execute">
+      <command>alacritty -e nano</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>Emacs</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-term-menu" label="Terminals">
+  <item label="Alacritty">
+    <action name="Execute"><command>alacritty</command></action>
+  </item>
+</menu>
+
+<menu id="apps-net-menu" label="Internet">
+  <item label="Firefox">
+    <action name="Execute">
+      <command>firefox</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>Firefox</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="qutebrowser">
+    <action name="Execute">
+      <command>qutebrowser</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>qutebrowser</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Neomutt">
+    <action name="Execute">
+      <command>alacritty -e neomutt</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>neomutt</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Weechat">
+    <action name="Execute">
+      <command>alacritty -e weechat</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>weechat</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Network Manager">
+    <action name="Execute">
+      <command>alacritty -e nmtui</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+        <wmclass>Network Manager</wmclass>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-office-menu" label="Office">
+  <item label="OpenOffice Base">
+    <action name="Execute">
+      <command>ooffice -base</command>
+    </action>
+  </item>
+  <item label="OpenOffice Calc">
+    <action name="Execute">
+      <command>ooffice -calc</command>
+    </action>
+  </item>
+  <item label="OpenOffice Draw">
+    <action name="Execute">
+      <command>ooffice -draw</command>
+    </action>
+  </item>
+  <item label="OpenOffice Impress">
+    <action name="Execute">
+      <command>ooffice -impress</command>
+    </action>
+  </item>
+  <item label="OpenOffice Math">
+    <action name="Execute">
+      <command>ooffice -math</command>
+    </action>
+  </item>
+  <item label="OpenOffice Printer Administration">
+    <action name="Execute">
+      <command>ooffice-printeradmin</command>
+    </action>
+  </item>
+  <item label="OpenOffice Writer">
+    <action name="Execute">
+      <command>ooffice -writer</command>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-multimedia-menu" label="Multimedia">
+  <item label="MPV">
+    <action name="Execute">
+      <command>mpv</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="OBS">
+    <action name="Execute">
+      <command>obs</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Pulsemixer">
+    <action name="Execute">
+      <command>alacritty -e pulsemixer</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item label="Ncmpcpp">
+    <action name="Execute">
+      <command>alacritty -e ncmpcpp</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-fileman-menu" label="File Managers">
+  <item label="Dired">
+    <action name="Execute">
+      <command>emacsclient -c -e '(dired "~")'</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+
+<menu id="apps-gaming-menu" label="Gaming">
+  <item label="Steam">
+    <action name="Execute">
+      <command>steam</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+</menu>
+<!-- <menu id="apps-graphics-menu" label="Graphics"> -->
+<!-- </menu> -->
+
+<menu id="system-menu" label="System">
+  <item label="Reconfigure Openbox">
+    <action name="Reconfigure" />
+  </item>
+</menu>
+
+<menu id="root-menu" label="Openbox 3">
+  <separator label="Applications" />
+  <menu id="apps-accessories-menu"/>
+  <menu id="apps-editors-menu"/>
+  <menu id="apps-graphics-menu"/>
+  <menu id="apps-net-menu"/>
+  <menu id="apps-office-menu"/>
+  <menu id="apps-multimedia-menu"/>
+  <menu id="apps-term-menu"/>
+  <menu id="apps-fileman-menu"/>
+  <menu id="apps-gaming-menu"/>
+  <separator label="System" />
+  <menu id="system-menu"/>
+  <separator />
+  <item label="Log Out">
+    <action name="Exit">
+      <prompt>yes</prompt>
+    </action>
+  </item>
+</menu>
+
+</openbox_menu>

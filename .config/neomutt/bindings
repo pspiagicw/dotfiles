@@ -1,0 +1,38 @@
+macro attach,compose \cb "<pipe-entry> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+
+macro pager L "<pipe-message> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+
+
+bind index,pager B sidebar-toggle-visible
+bind index g noop
+bind index gg first-entry
+bind index G last-entry
+bind pager h exit
+bind index l display-message
+bind index h noop
+bind pager j next-line
+bind pager k previous-line
+bind pager J next-undeleted
+bind pager K previous-undeleted
+bind attach h exit
+bind index d noop
+bind index dd delete-message
+bind pager G bottom
+bind pager g noop
+bind pager gg top
+bind pager l view-attachments
+bind attach l view-attach
+bind index "^" imap-fetch-mail
+
+
+macro index,pager <f2> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/work<enter><change-folder>!<enter>'
+macro index,pager <f3> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/personal<enter><change-folder>!<enter>'
+macro index,pager <f4> '<sync-mailbox><enter-command>source ~/.config/neomutt/accounts/college<enter><change-folder>!<enter>'
+bind index,pager \Ck sidebar-prev
+bind index,pager \Cj sidebar-next
+bind index,pager \Co sidebar-open
+bind index,pager \Cp sidebar-prev-new
+bind index,pager \Cn sidebar-next-new
+
+bind editor <Tab> complete-query
+macro index,pager a "<pipe-message>abook --add-email-quiet<return>" "Add this sender to abook"

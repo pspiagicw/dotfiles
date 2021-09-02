@@ -1,0 +1,11 @@
+#!/bin/sh
+temp=`nvidia-smi | awk '/Default/{ print int($3) }'`
+if [ $temp -le 50 ]
+then
+    echo "<fc=#50fa7b>+${temp}°C</fc>"
+elif [ $temp -gt 50 ] && [ $temp -le 70 ]
+then
+    echo "<fc=#ffb86c>+${temp}°C</fc>"
+else
+    echo "<fc=#ff5555>+${temp}°C</fc>"
+fi

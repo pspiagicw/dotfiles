@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DMENU='dmenu -i'
+choice=$(echo -e "ytfzf\ntuir\ncava\nnvtop\nbpytop\ntop\ntremc\npulsemixer\nneomutt\nnewsboat\nweechat\nncmpcpp\nnmtui" | $DMENU)
+alacritty -e $choice

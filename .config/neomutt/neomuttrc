@@ -1,0 +1,15 @@
+source "~/.config/neomutt/settings"
+source "~/.config/neomutt/colors"
+source "~/.config/neomutt/bindings"
+
+
+# Accounts
+
+source "~/.config/neomutt/accounts/work"
+folder-hook $folder 'source ~/.config/neomutt/accounts/work'
+
+source "~/.config/neomutt/accounts/personal"
+folder-hook $folder 'source ~/.config/neomutt/accounts/personal'
+
+source "~/.config/neomutt/accounts/college"
+folder-hook $folder 'source ~/.config/neomutt/accounts/college'

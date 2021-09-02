@@ -1,0 +1,28 @@
+Config { font = "xft:JetBrains Mono:weight=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , additionalFonts = []
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "#282a36"
+       , fgColor = "#f8f8f2"
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "~/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#ffb86c","--high","#ff5555","--low","#50fa7b","--template","<fc=#ffb86c>CPU</fc>:<total>%"] 10
+                    , Run Memory ["--template","<fc=#50fa7b>MEM</fc>: <usedratio>%","-L","3","-H","50","--low","#50fa7b","--normal","#ffb86c","--high","#ff5555"] 10
+                    , Run Swap ["--template","<fc=#f1fa8c>SWP</fc>:<usedratio>%"] 10
+                    , Run Date "<fc=#ff79c6>%H:%M</fc>" "date" 10
+                    , Run Battery ["--template","<fc=#bd93f9>BAT</fc>:<left>%","-L","15","-H","70","--low","#ff5555","--normal","#ffb86c","--high","#50fa7b"] 60
+                    , Run UnsafeStdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "<icon=haskell_20.xpm/>| %UnsafeStdinReader% }{ %cpu% | %memory% * %swap% | %battery% | %date% "
+       }

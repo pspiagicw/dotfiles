@@ -1,0 +1,20 @@
+unmailboxes *
+set realname="pspiagicw"
+set from="pspiagicw@gmail.com"
+
+source "gpg -dq ~/.config/neomutt/work-passphrase.gpg |"
+
+set smtp_url = "smtp://pspiagicw@smtp.gmail.com:587"
+set smtp_pass=$my_pass
+# set imap_user="pspiagicw@gmail.com"
+set imap_pass=$my_pass
+set imap_keepalive = 900	#
+set folder = "imaps://pspiagicw@gmail.com@imap.gmail.com:993"
+set spoolfile = "+INBOX"
+set postponed = "+[Gmail]/Drafts"
+
+unset imap_passive
+
+set imap_keepalive = 300
+
+account-hook $folder "set imap_pass=$my_pass"

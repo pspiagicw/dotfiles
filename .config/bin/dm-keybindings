@@ -1,0 +1,5 @@
+#!/bin/sh
+set -euo pipefail
+data=`sed -n '/START_KEYS/,/END_KEYS/p' ~/.xmonad/xmonad.hs | sed '1d' | head -n -1 | sed -re 's/--\ (.*)/\1/'`
+echo "$data" | sed  's/.*/&\n/' | zenity --text-info --width=1000 --height=1000
+

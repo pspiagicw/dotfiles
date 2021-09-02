@@ -1,0 +1,13 @@
+#!/bin/sh
+
+mem=`nvidia-smi |  awk '/.*Default.*/{ print int((int($9)/int($11))*100) }'`
+
+if [ $mem -le 40 ]
+then
+    echo "<fc=#50fa7b>${mem}%</fc>"
+elif [ $mem -gt 40 ] && [ $mem -le 80 ]
+then
+    echo "<fc=#ffb86c>${mem}%</fc>"
+else
+    echo "<fc=#ff5555>${mem}%</fc>"
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+
+
+find ~/.config/wallpaper/wallpapers -type f | dmenu -i -l 10 -p "Choose wallpaper" | xargs feh --no-fehbg --bg-scale

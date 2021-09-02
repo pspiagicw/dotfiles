@@ -1,0 +1,35 @@
+set smtp_authenticators = "plain"
+set move = no
+cd "~/downloads/"
+set use_from = yes
+set ssl_starttls = yes
+set ssl_force_tls = yes
+set editor = "emacsclient -c -nw"
+set charset = "utf-8"
+
+set sidebar_visible
+set mail_check_stats
+
+# Beep on new mail
+set beep_new
+set new_mail_command = "notify-send --icon=/home/pspiagicw/.config/neomutt/icon.png 'New Email' '%n new messages , %u unread.' &"
+
+# Opens text/html with w3m automatically
+auto_view text/html
+# Stops from going to next mail at end
+set pager_stop
+# Include message in forwards
+set forward_quote
+# Skip to compose when replying
+set fast_reply
+# Disables arrow to current mail
+set arrow_cursor="no"
+set header_cache = "~/.cache/neomutt/headers"
+set message_cachedir = "~/.cache/neomutt/bodies"
+set certificate_file = "~/.cache/certificates"
+
+set mailcap_path="~/.config/neomutt/mailcap"
+
+set query_command="abook --mutt-query '%s'"
+set copy = "no"
+set imap_check_subscribed

@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+###
+
+DMENU='dmenu -i'
+choice=$(echo -e "lock\nlogout\nshutdown\nreboot\nsuspend\nhibernate\n" | $DMENU )
+echo $choice
+
+case "$choice" in
+  shutdown) systemctl poweroff    ;;
+  reboot) systemctl reboot ;;
+  suspend) systemctl suspend    ;;
+  hibernate) systemctl hibernate    ;;
+  lock) betterlockscreen --lock ;;
+esac
