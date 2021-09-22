@@ -2,7 +2,7 @@
 
 
 DMENU='dmenu -i'
-choice=$(echo -e "fullscreen\nselect" | $DMENU )
+choice=$(echo -e "fullscreen\nselect\nfind" | $DMENU )
 name="ScreenShot-$(date | awk '{ print $4 }').png"
 
 
@@ -10,8 +10,8 @@ shownotification () {
     notify-send --urgency=normal --icon=~/.config/dunst/screenshot.svg "Screenshot" "Screenshot Taken Copied to Clipboard!"
 }
 case "$choice" in
-  fullscreen) maim ~/pictures/screenshots/"Screenshot-$(date +%s).png" | xclip -selection clipboard -t image/png; shownotification ;;
- select) maim -s ~/pictures/screenshots/"Screenshot-$(date +%s).png" | xclip -selection clipboard -t image/png ; shownotification ;;
-  # window) maim -i "$(xdotool getactivewindow)"  ~/pictures/screenshots/"$name" ; shownotification ;;
-esac
+    fullscreen) maim ~/pictures/screenshots/"Screenshot-$(date +%s).png" | xclip -selection clipboard -t image/png; shownotification ;;
+    select) maim -s ~/pictures/screenshots/"Screenshot-$(date +%s).png" | xclip -selection clipboard -t image/png ; shownotification ;;
+    find) dm-file ~/pictures/screenshots ;;
+    esac
 

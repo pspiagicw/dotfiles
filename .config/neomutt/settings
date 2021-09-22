@@ -4,7 +4,7 @@ cd "~/downloads/"
 set use_from = yes
 set ssl_starttls = yes
 set ssl_force_tls = yes
-set editor = "emacsclient -c -nw"
+set editor = "TERM=xterm-24bit emacsclient -c -nw -a nano"
 set charset = "utf-8"
 
 set sidebar_visible
@@ -15,7 +15,7 @@ set beep_new
 set new_mail_command = "notify-send --icon=/home/pspiagicw/.config/neomutt/icon.png 'New Email' '%n new messages , %u unread.' &"
 
 # Opens text/html with w3m automatically
-auto_view text/html
+# auto_view text/html
 # Stops from going to next mail at end
 set pager_stop
 # Include message in forwards

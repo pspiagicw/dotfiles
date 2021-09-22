@@ -62,6 +62,8 @@ static unsigned int full = 90;
 static char *warningmsg = "Battery is low";
 static char *criticalmsg = "Battery is critically low";
 static char *fullmsg = "Battery is full";
+static char *disconnectedmsg = "Charging Disconnected";
+static char *connectedmsg = "Charging Connected";
 
 /* run this system command if battery reaches danger level */
 static char *dangercmd = "";
@@ -323,11 +325,16 @@ int main(int argc, char *argv[])
     err(EXIT_FAILURE, "Failed to daemonize");
   }
 
+  int charging_or_not = 0;
   for(;;) {
     update_battery();
     duration = multiplier;
 
     if (battery_discharging) { /* discharging */
+      if (charging_or_not == 1) {
+	charging_or_not = 0;
+	notify(disconnectedmsg, NOTIFY_URGENCY_NORMAL);
+      }
       if (danger && battery_level <= danger && battery_state != STATE_DANGER) {
         battery_state = STATE_DANGER;
         if (dangercmd[0] != '\0')
@@ -351,6 +358,10 @@ int main(int argc, char *argv[])
 
     } else { /* charging */
         battery_state = STATE_AC;
+	if (charging_or_not == 0) {
+	  notify(connectedmsg , NOTIFY_URGENCY_NORMAL);
+	}
+	charging_or_not = 1;
         if (full && battery_level >= full && battery_state != STATE_FULL) {
             battery_state = STATE_FULL;
             notify(fullmsg, NOTIFY_URGENCY_NORMAL);

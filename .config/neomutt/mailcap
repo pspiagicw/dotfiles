@@ -1,5 +1,7 @@
 # qutebrowser as default browser
-text/html;    	 qutebrowser %s
+# text/html;    	 emacsclient -c -e '(eww-open-file "%s")'
+text/html;    	 emacsclient -c -e '(eww-open-file "%s")' ; nametemplate=%s.html
+text/plain;	 emacsclient -c %s
 image/*;	 feh %s;
 video/*;	 mpv %s; 
 application/pdf; zathura %s 1>/dev/null;

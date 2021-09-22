@@ -8,7 +8,7 @@ prompt="$2"
 while true; do
 	p="$prompt"
 	[ -z "$p" ] && p="$target"
-	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -i -p "$p" -l 25)"
+	sel="$(ls -1a "$target" |grep -v '^\.$' | dmenu -i -p "$p" -l 10)"
 	ec=$?
 	[ "$ec" -ne 0 ] && exit $ec
 
@@ -28,3 +28,5 @@ while true; do
 	fi
 done
 # xdg-open "$(find -type f -not -path '*/\.*'  -not -path './downloads/*' -not -path './music/*' -not -path './code/games/*'| dmenu -i -l 10 -p "Choose Files" )"
+# Alternative implementation
+# echo "" | dmenu -i -p 'FileName?:' | xargs locate | dmenu | xargs mimi

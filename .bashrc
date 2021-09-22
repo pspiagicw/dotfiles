@@ -15,7 +15,7 @@ if [[ $- != *i* ]] ; then
 fi
 
 # Put your fun stuff here.
-export PATH=$PATH:~/.local/bin:~/.config/bin
+export PATH=$PATH:~/.local/bin:~/.config/bin:~/.local/share/flutter/bin
 export MANPATH=$MANPATH:~/.local/share/man
 
 # export BROWSER='qutebrowser'
@@ -27,5 +27,13 @@ alias ll='ls -la --color'
 alias la='ls -a --color'
 export PS1="\[\e[32m\]\$\[\e[m\] "
 
-alias nvim="TERM=xterm-24bit emacsclient -c -nw"
+alias nvim="TERM=xterm-24bit emacsclient -c --alternate-editor nano -nw "
 export TUIR_URLVIEWER="urlscan"
+# (cat ~/.cache/wal/sequences &)
+
+export LFS=/mnt/lfs
+emacsman() {
+    emacsclient -c -e "(let ((Man-notify-method 'bully)) (man \"$1\"))"
+}
+
+alias man=emacsman

@@ -38,5 +38,5 @@ repeat) mpc repeat ; showfunc ;;
 single) mpc single ; showfunc ;;
 forward) mpc seekthrough +00:00:10 ;;
 backward) mpc seekthrough -00:00:10 ;;
-status) showfunc ;;
+status) timeout 30s xmobar ~/.config/xmobar/xmobar-music ;;
 esac

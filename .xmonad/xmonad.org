@@ -1,3 +1,29 @@
+#+title: XMonad Tilling Window Manager
+#+author: pspiagicw
+#+property: header-args:haskell :tangle ~/.xmonad/xmonad.hs
+Xmonad tiling window manager is a Tiling Window manager written in Haskell , extremely configurable and hackable using Haskell.
+Install from the standard Linux repositories!
+#+begin_src shell
+sudo pacman -S xmonad xmonad-contrib
+#+end_src
+* Features
+  * Configurable in Haskell
+  * Very Fast
+  * Compilation Based
+* Disadvantages
+  * Requires Haskell Dependencies
+  * Configurable in Haskell!
+* Installation
+  XMonad is in standard repos of ArchLinux , just install using pacman . xmonad-contrib provides a lot of extra functionality and is a community repository of special bundles of Haskell! 
+* Configuration
+  Haskell can be a pretty scary language but examples on xmonad.org can make some of that experience easier . Checkout the default xmonad default config template [[https://wiki.haskell.org/Xmonad/Config_archive/Template_xmonad.hs_(0.9)][here]].
+  DistroTube's here to make it a little easy , checkout all his videos on the XMonad Window Manager [[https://www.youtube.com/playlist?list=PL5--8gKSku144jIsizdhdxq_fKTmBBGBA][here]]. He really covers features that make xmonad the best window-manager!
+* Imports
+  Imports are the heart of a xmonad-config  , they allow importing awesome haskell libraries written by some cool functional programmers!
+
+** Haskell
+   These imports are Haskell Imports for custom functions and general programming in Haskell
+  #+begin_src haskell
 import Control.Arrow(first)
 import Data.List
 import Data.Tree
@@ -9,29 +35,71 @@ import XMonad
 import qualified Data.Map as M
 import qualified Data.Map.Strict as Map
 import qualified XMonad.StackSet as W
+  #+end_src
+** Actions
+   These provide some ways to act on something!
 
+   * Actions.FloatKeys: Provides functions to act on windows to move/resize them.
+   * Actions.NoBorders: Provides functions to act on windows to control their borders
+   * Actions.SubMap: Provides functions to have Submaps in xmonad keybindings , example "M-m a"
+   * Actions.WithAll: Provides useful functions to apply other functions to all the windows!
+
+   #+begin_src haskell
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.NoBorders
 import XMonad.Actions.Search
 import XMonad.Actions.Submap
 import XMonad.Actions.WithAll
+   #+end_src
 
+** Hooks
+   These provide ability to run custom functions at some event.
+
+   * Hooks.DynamicLog: Provides ability to do do something when workspace layouts are changed.
+   * Hooks.ManageDocks: Provides ability to execute when Docks are changed ( Example bar is retracted)
+   * Hooks.ServerMode: Provides ability to control xmonad from command line.
+   * Hooks.SetWMName: Provides ability to change name of WM . Useful for working with Java Applications (They expect a reparenting window manager) . See [[https://wiki.archlinux.org/title/Java#Gray_window,_applications_not_resizing_with_WM,_menus_immediately_closing][here]]
+   * Hooks.EwmhDesktop: Provides ability to talk to Extended Window Manager Hints (EWMH) system. See [[https://en.wikipedia.org/wiki/Extended_Window_Manager_Hints][here]]
+  
+   #+begin_src haskell
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers
+   #+end_src
+** Layout
+   Provide layout options , additional layouts .
 
+   * Layouts.ShowWMName: Displays name of workspace on change.
+   * Layout.Spacing: Provides /Gaps/ for aesthetic purpose.
+
+
+   #+begin_src haskell
 import XMonad.Layout.ShowWName
 import XMonad.Layout.Spacing
+   #+end_src
+** Util
+   Provides basic utilities
 
+   * Util.Cursor: Library to control cursor appearance , I use it to change the cursor to a normal shape. See [[https://wiki.archlinux.org/title/Cursor_themes#Change_X_shaped_default_cursor][here]]
+   * Util.EZConfig: Library to declare keybindings easily and in Emacs form. Example "M-m C-s".
+   * Util.Loggers: Library to log stuff ! Useful to pipe into xmobar
+   * Util.Run: Library to run a executable during startup of xmonad.
+   * Util.SpawnOnce: Library to autostart things only once at boot of xmonad.
+
+#+begin_src haskell
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig(additionalKeysP)
 import XMonad.Util.Loggers
 import XMonad.Util.Run
 import XMonad.Util.SpawnOnce
+#+end_src
 
+* Defaults
+  Declares Global Variables used in entire xmonad config , these involve the actual mod key , normal border color , focused border color and size of gaps.
+#+begin_src haskell
 myBorderWidth = 1
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -46,7 +114,23 @@ myGapsDiff = 10
 myNormalBorderColor  = "#6272a4"
 myFocusedBorderColor = "#ff79c6"
 myTerminal = "alacritty"
+#+end_src
 
+* Autostart
+  This uses spawnOnce to autostart various daemons!
+
+  * Feh: Wallpaper Setter
+  * SetXKBMap: Sets up caps lock key to act like ctrl
+  * Redshift: Night Light Daemon
+  * Picom: Compositor to provide transparency , animations , blur etc.
+  * Transmission-Daemon: Torrent daemon
+  * Emacs: Starts the Emacs Daemon
+  * Batsignal: Daemon to notify about battery events ( Low Battery , Full Charge etc)
+  * XSS-Lock + BetterLockScreen: Activates lockscreen on systemd-events like ( Lock , Sleep , Hibernate)
+  * Dunst: Notification Daemon  , shows notification and connects with /libnotifyd/.
+  * SetWMName: Changes WM Name to play nice with Java GUIs
+
+#+begin_src haskell
 myStartupHook = do
     spawnOnce "feh --no-fehbg --bg-scale ~/.config/wallpaper/wallpaper.png &"
     spawnOnce "setxkbmap -option ctrl:nocaps &"
@@ -60,6 +144,12 @@ myStartupHook = do
     spawnOnce "dunst &"
     setWMName "LG3D"
     setDefaultCursor xC_pirate
+#+end_src
+
+* Layouts and Workspaces
+  These configuration , declare all the workspaces and layouts I use , including name of all my workspaces ( main sys browser media college ).
+  The Layout Hook is a little more complex and provides Gaps Support , Xmobar support , display name of workspace etc.
+#+begin_src haskell
 
 myWorkspaces = ["main","sys","browser","media","college"]
 myWorkspaceIndices = Map.fromList $ zipWith (,) myWorkspaces [1..]
@@ -74,6 +164,14 @@ myLayoutHook = spacingRaw False (Border 10 4 4 4) True (Border 10 4 4 4 ) True $
             nmaster = 1
             ratio = 1/2
             delta = 1/100
+#+end_src
+
+* ManageHook And MainHook
+  ManageHook declares rules that each window follows , including
+  * doShift: Shifts window to that workspace.
+  * doCenterFloat: Spawns that window in the center of the workspace
+
+#+begin_src haskell
 
 myManageHook = composeAll
         [ className =? "qutebrowser"  --> doShift "browser"
@@ -89,6 +187,10 @@ myManageHook = composeAll
         , className =? "Steam" --> doCenterFloat
         , className =? "scrcpy" --> doCenterFloat ]
 
+#+end_src
+* Meta Keybindings
+  These keybindings are for multi-monitor and mouse setups. They are included for simplicity and reference. They are copied right from the default config.
+#+begin_src haskell
 myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
     [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
     | (key, sc) <- zip [xK_w, xK_r] [0..]
@@ -100,7 +202,15 @@ myKeys conf@(XConfig { XMonad.modMask = modm }) = M.fromList $
     [((m .|. modm, k), windows $ f i)
     | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+#+end_src
+* Custom Functions
+  These include custom functions for using across the entire config .Functions include
 
+  * disableBar: Simple function disables all gaps and hides all bars
+  * windowCount: Simple function that returns the number of windows in the current workspace
+  * toggleFloat: Simple function to toggle Floating status of given window
+    
+#+begin_src haskell
 disableBar = do
     sendMessage ToggleStruts
     toggleWindowSpacingEnabled
@@ -112,7 +222,14 @@ windowCount = gets $ Just . show . length . W.integrate'  . W.stack . W.workspac
 toggleFloat w = windows (\s -> if M.member w (W.floating s)
                 then W.sink w s
                 else (W.float w (W.RationalRect (1/3) (1/2) (1/2) (4/5)) s))
+#+end_src
+* Main
+  The main funcion of any haskell document , is the entry point of executing any code!
+  This main function compiles all previous configuration into a proper xmonad function.
 
+** DynamicLogWithPP
+   This is a complex snippet where a lot of xmobar stuff happens. This is quite complex even for me! DistroTube has a pretty good config using these functions.
+#+begin_src haskell
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad $  docks $ ewmh defaultConfig {
@@ -142,7 +259,15 @@ main = do
     handleEventHook     = fullscreenEventHook,
     focusFollowsMouse   = False
     } `additionalKeysP`
+#+end_src
 
+* Keybindings
+  These are the list of all the custom keybindings using EZKeys function additionalKeysP. These provide support for /SubMaps/.
+  These are mostly spawn functions but , also include invocations to Haskell functions.
+
+  They are less for explanation and more about customizing
+   
+#+begin_src haskell
         [ ("M-<Return>" , spawn "alacritty") -- Spawns Alacritty
         , ("M-;" , spawn "dmenu_run") -- Spawns Dmenu
         , ("M-S-c" , kill) -- Deletes window
@@ -185,3 +310,4 @@ main = do
         , ("M-m C-j" , withFocused (keysResizeWindow ( 10 , 10) (1 , 0) ))  -- Bring the editor
         , ("M-m C-k" , withFocused (keysResizeWindow ( -10 , -10) (0 , 1) ))  -- Bring the editor
         ]
+#+end_src
