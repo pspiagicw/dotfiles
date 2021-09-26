@@ -25,6 +25,7 @@ import XMonad.Hooks.ManageHelpers
 
 import XMonad.Layout.ShowWName
 import XMonad.Layout.Spacing
+import XMonad.Layout.NoBorders
 
 import XMonad.Util.Cursor
 import XMonad.Util.EZConfig(additionalKeysP)
@@ -52,7 +53,6 @@ myStartupHook = do
     spawnOnce "setxkbmap -option ctrl:nocaps &"
     spawnOnce "killall unclutter;unclutter &"
     spawnOnce "redshift -PO 3400 &"
-    spawnOnce "picom -b &"
     spawnOnce "killall transmission-daemon ;transmission-daemon &"
     spawnOnce "emacs --daemon"
     spawnOnce "killall batsignal ; batsignal &"
@@ -68,7 +68,7 @@ clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
             i = fromJust $ Map.lookup ws myWorkspaceIndices
 
 
-myLayoutHook = spacingRaw False (Border 10 4 4 4) True (Border 10 4 4 4 ) True $ avoidStruts $ showWName' myShowWNameTheme ( tiled ) 
+myLayoutHook = spacingRaw False (Border 10 4 4 4) True (Border 10 4 4 4 ) True $ smartBorders $  avoidStruts $ showWName' myShowWNameTheme ( tiled ) 
     where
             tiled = Tall nmaster delta ratio
             nmaster = 1
@@ -81,7 +81,7 @@ myManageHook = composeAll
         , className =? "VirtualBox Manager" --> doCenterFloat
         , className =? "VirtualBox Machine" --> doCenterFloat
         , className =? "discord" --> doShift "browser"
-        , className =? "mpv" --> doCenterFloat
+        , className =? "mpv" --> doCenterFloat 
         , className =? "Yad" --> doCenterFloat
         , className =? "Pcmanfm" --> doCenterFloat
         , className =? "feh" --> doCenterFloat

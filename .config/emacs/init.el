@@ -229,7 +229,7 @@
 
 (use-package evil-org
   :after org
-  :hook (org-mode . (lambda () evil-org-mode))
+  :hook (org-mode . evil-org-mode)
 )
 
 (use-package counsel
@@ -252,6 +252,8 @@
   ("C-k" . ivy-previous-line)
   :config
   (counsel-mode 1)
+  (setq ivy-re-builders-alist
+	'((t      . ivy--regex-plus)))
   )
 
 (use-package ivy-rich)
@@ -571,6 +573,10 @@
 (use-package olivetti)
 (add-hook 'eww-mode-hook (lambda () (olivetti-mode)))
 
+(setq browse-url-browser-function 'custom-browse-url)
+(setq browse-url-secondary-browser-funcion 'browse-url-generic)
+(setq browse-url-generic-program "qutebrowser")
+
 (use-package openwith
   :config
   (setq openwith-associations
@@ -658,6 +664,24 @@ To be used by `eww-after-render-hook'."
       (counsel-projectile-grep)
     (counsel-grep)))
 
+(defun custom-open-eww ()
+  (interactive)
+  (eww-browse-url url-to-open)
+  )
+(defun custom-browse-url-generic ()
+  (interactive)
+  (browse-url-generic url-to-open)
+  )
+(defun custom-reddigg-url ()
+  (interactive)
+  (reddigg-view-comments url-to-open)
+  )
+(defun custom-browse-url (url &optional a)
+    "Browse URL"
+    (setq url-to-open url)
+    (command-execute 'hydra-url/body)
+)
+
 (defun custom-vsplit ()
   "Custom vpslit with focus going to split"
   (interactive)
@@ -714,6 +738,135 @@ To be used by `eww-after-render-hook'."
   (evil-previous-visual-line)
   (mpc-select)
  )
+(defun increase-mpc-volume ()
+  (interactive)
+  (async-shell-command "mpc volume +5")
+)
+
+(defun decrease-mpc-volume ()
+  (interactive)
+  (async-shell-command "mpc volume -5")
+ )
+
+(setq config-dict '(
+		    (alacritty . "~/.config/alacritty/alacritty.yml")
+		    (emacs . "~/.config/emacs/emacs.org")
+		    (xmonad . "~/.xmonad/xmonad.org")
+		    (bash . "~/.bashrc")
+		    (dunst . "~/.config/dunst/dunstrc")
+		    (xmobar . "~/.config/xmobar/xmobarrc")
+		    ))
+(defun counsel-confedit ()
+  "Edit a config file"
+  (interactive)
+  (ivy-read "Edit Config: "
+	    (mapcar 'car (car ( list config-dict)))
+	    :action (lambda (x)
+		      (find-file (alist-get (intern x) config-dict)))))
+
+(defun counsel-run-comand ()
+  "Run a command"
+  (interactive)
+  (ivy-read "Run Command: "
+	    (split-string (shell-command-to-string "dmenu_path"))
+	    :action (lambda (x)
+		      (async-shell-command x))))
+
+(setq wallpaper-directory "~/.config/wallpaper/wallpapers")
+(defun counsel-wallpaper ()
+  "Change wallpaper"
+  (interactive)
+  (ivy-read "Choose Wallpaper: "
+	    (directory-files wallpaper-directory)
+	    :action (lambda (x)
+		      (async-shell-command (format "feh --no-fehbg --bg-fill %s/%s" wallpaper-directory x)))))
+
+(use-package general)
+
+(use-package hydra)
+
+(defhydra hydra-window (:color red
+                        :hint nil)
+  "
+ Split: _v_ert _x_:horz
+Delete: _o_nly  _da_ce  _dw_indow  _db_uffer  _df_rame
+  Move: _s_wap
+Frames: _f_rame new  _df_ delete
+  Misc: _m_ark _a_ce  _u_ndo  _r_edo"
+  ("h" windmove-left)
+  ("j" windmove-down)
+  ("k" windmove-up)
+  ("l" windmove-right)
+  ("H" hydra-move-splitter-left)
+  ("J" hydra-move-splitter-down)
+  ("K" hydra-move-splitter-up)
+  ("L" hydra-move-splitter-right)
+  ("|" (lambda ()
+         (interactive)
+         (split-window-right)
+         (windmove-right)))
+  ("_" (lambda ()
+         (interactive)
+         (split-window-below)
+         (windmove-down)))
+  ("v" split-window-right)
+  ("x" split-window-below)
+  ;("t" transpose-frame "'")
+  ;; winner-mode must be enabled
+  ("u" winner-undo)
+  ("r" winner-redo) ;;Fixme, not working?
+  ("o" delete-other-windows :exit t)
+  ("a" ace-window :exit t)
+  ("f" new-frame :exit t)
+  ("s" ace-swap-window)
+  ("da" ace-delete-window)
+  ("dw" delete-window)
+  ("db" kill-this-buffer)
+  ("df" delete-frame :exit t)
+  ("q" nil)
+  ;("i" ace-maximize-window "ace-one" :color blue)
+  ;("b" ido-switch-buffer "buf")
+  ("m" headlong-bookmark-jump)
+)
+
+(defhydra hydra-url (:exit t)
+  "Browse URL"
+  ("e" custom-open-eww "eww")
+  ("b" custom-browse-url-generic "external browser")
+  ("r" custom-reddigg-url "reddigg")
+)
+
+(defhydra hydra-lsp (:exit t :hint nil)
+  "
+ Buffer^^               Server^^                   Symbol
+-------------------------------------------------------------------------------------
+ [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
+ [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
+ [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
+  ("d" lsp-find-declaration)
+  ("D" lsp-ui-peek-find-definitions)
+  ("R" lsp-ui-peek-find-references)
+  ("i" lsp-ui-peek-find-implementation)
+  ("t" lsp-find-type-definition)
+  ("s" lsp-signature-help)
+  ("o" lsp-describe-thing-at-point)
+  ("r" lsp-rename)
+
+  ("f" lsp-format-buffer)
+  ("m" lsp-ui-imenu)
+  ("x" lsp-execute-code-action)
+
+  ("M-s" lsp-describe-session)
+  ("M-r" lsp-restart-workspace)
+  ("S" lsp-shutdown-workspace)
+ )
+
+(defhydra hydra-toggle ()
+  "Toggle Settings"
+  ("a" custom-open-eww "eww")
+  ("b" custom-browse-url-generic "external browser")
+  ("r" custom-reddigg-url "reddigg")
+)
 
 (general-define-key
  :states '(normal visual)
@@ -724,6 +877,9 @@ To be used by `eww-after-render-hook'."
   "<" '(evil-prev-buffer :which-key "Move to Prev Buffer")
   "/" '(counsel-grep :which-key "Grep in Current Buffer")
   "." '(find-file :which-key "Find File")
+  "!" '(shell-command :which-key "Execute Shell Command")
+  "&" '(async-shell-command :which-key "Execute Shell Command Async")
+  "RET" '(counsel-bookmark :which-key "Browse Bookmarks")
 )
 
 (general-define-key
@@ -750,7 +906,7 @@ To be used by `eww-after-render-hook'."
  "fr" '(counsel-recentf :which-key "Find Recent Files")
  "fR" '(rename-file :which-key "Rename File")
  "fC" '(copy-file :which-key "Copy File")
- "fL" '(locate :which-key "Locate File")
+ "fl" '(counsel-locate :which-key "Locate File")
 )
 
 (general-define-key
@@ -847,7 +1003,18 @@ To be used by `eww-after-render-hook'."
  "wj" '(evil-window-down :which-key "Move to Below Window")
  "wk" '(evil-window-up :which-key "Move to Top Window")
  "wo" '(delete-other-windows :which-key "Delete other Windows")
+ "wu" '(winner-undo :which-key "Undo Window Configuration")
+ "wr" '(winner-redo :which-key "Redo Window Configuration")
+ "w." '(hydra-window/body :which-key "Window Transient State")
 )
+
+(general-define-key
+ :states '(normal visual)
+ :keymaps 'override
+ :prefix "SPC"
+ "ll" '(lsp :which-key "Start/Connect with LSP Server")
+ "l." '(hydra-lsp/body :which-key "LSP Transient State")
+ )
 
 (general-define-key
  :states '(normal visual)
@@ -867,17 +1034,25 @@ To be used by `eww-after-render-hook'."
  "oo" '(openwith-mode :which-key "Toggle OpenWith Mode")
  "or" '(reddigg-view-main :which-key "Open Reddit")
  "oa" '(org-agenda :which-key "Org Agenda")
- "om" '(simple-mpc :which-key "Open Simple MPC")
+ "om" '(mpc :which-key "Open Simple MPC")
  "ob" '(eww :which-key "Open Browser")
  "oM" '(mu4e :which-key "Open Mu4e")
 )
+
+(use-package link-hint)
+
+(use-package ace-window)
 
 (general-define-key
  :keymaps 'override
  :states '(normal visual)
  :prefix "SPC"
  "j" '(:ignore t :which-key "Jump")
- "ji" '(counsel-imenu-or-semantic :which-key "Jump to tag using Imenu")
+ "ji" '(counsel-semantic-or-imenu :which-key "Jump to tag using Imenu")
+ "jl" '(link-hint-open-link :which-key "Jump to link")
+ "jw" '(ace-window :which-key "Jump to Window")
+ "jn" '(next-error :which-key "Jump to next error")
+ "jp" '(previous-error :which-key "Jump to next error")
  )
 
 (general-define-key
@@ -946,6 +1121,7 @@ To be used by `eww-after-render-hook'."
  :keymaps 'elfeed-show-mode-map
  :states 'normal
  "h" 'custom-elfeed-back
+ "f" 'link-hint-open-link
  )
 (general-define-key
  :keymaps 'elfeed-search-mode-map
@@ -979,8 +1155,7 @@ To be used by `eww-after-render-hook'."
  "j" 'move-mpc-down
  "k" 'move-mpc-up
  "t" 'mpc-toggle-play
- "r" 'mpc-toggle-repeat
- "s" 'mpc-toggle-shuffle
+ "r" 'mpc-repeat
  "S" 'mpc-toggle-shuffle
  "c" 'mpc-toggle-consume
  "a" 'mpc-playlist-add
@@ -990,6 +1165,8 @@ To be used by `eww-after-render-hook'."
  "R" 'mpc-playlist-delete
  "x" 'mpc-play-at-point
  "RET" 'mpc-select
+ "+" 'increase-mpc-volume
+ "-" 'decrease-mpc-volume
  )
 (general-define-key
  :keymaps 'mpc-status-mode-map
@@ -1008,3 +1185,27 @@ To be used by `eww-after-render-hook'."
  "mt" '(erc-set-topic :which-key "ERC Topic")
  "mn" '(erc-channel-names :which-key "ERC Names")
  )
+
+(general-define-key
+ :keymaps 'eww-mode-map
+ :states 'normal
+ "f" 'link-hint-open-link
+)
+
+(general-define-key
+ :keymaps 'Info-mode-map
+ :states 'normal
+ "f" 'link-hint-open-link
+)
+
+(general-define-key
+ :keymaps 'help-mode-map
+ :states 'normal
+ "f" 'link-hint-open-link
+)
+
+;; Force OpenWith mode to close
+(openwith-mode -1)
+(setq ivy-re-builders-alist
+      '((t . ivy--regex-ignore-order))
+)
