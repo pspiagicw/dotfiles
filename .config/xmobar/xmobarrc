@@ -1,7 +1,7 @@
 Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
        , borderColor = "#bd93f9"
        , bgColor = "#282a36"
-       , fgColor = "#f8f2f2"
+       , fgColor = "#f8f8f2"
        , borderWidth = 0
        , border = BottomB
        , alpha = 255
@@ -15,7 +15,7 @@ Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hi
        , iconRoot = "/home/pspiagicw/.config/xmobar/"
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#ffb86c","--high","#ff5555","--low","#50fa7b","--template","<fc=#ffb86c>CPU</fc>: <total>%"] 10
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#feacd0","--high","#ff8059","--low","#44bc44","--template","<fc=#feacd0>CPU</fc>: <total>%"] 10
                     , Run Memory ["--template","<fc=#50fa7b>MEM</fc>: <usedratio>%","-L","3","-H","50","--low","#50fa7b","--normal","#ffb86c","--high","#ff5555"] 10
                     , Run Date "<fc=#ff79c6>%H:%M</fc>" "date" 10
                     , Run Battery ["--template","<fc=#bd93f9>BAT: </fc><left>%","-L","15","-H","70","--low","#ff5555","--normal","#ffb86c","--high","#50fa7b"] 60

@@ -118,7 +118,6 @@ paru -S mbsync-git and mu
    
 * UI Configuration
   My UI Configuration is a beautiful collage of packages that make my Emacs experience beautiful along with efficient.
-
   
 ** Ugly Modes
    Emacs GUI mode by default incudes , menu , scroll , tool bar.
@@ -168,7 +167,7 @@ paru -S mbsync-git and mu
   :config
   (setq modus-themes-no-mixed-fonts t
 	modus-themes-prompts '(intense gray)
-	modus-themes-mode-line '(accented)
+	modus-themes-mode-line '(nil)
 	modus-themes-completion '(opinionated)
 	modus-themes-org-blocks '(gray-background)
 	)
@@ -1142,7 +1141,7 @@ To be used by `eww-after-render-hook'."
   (interactive)
   (if (projectile-project-p)
       (projectile-run-eshell)
-    (eshell)))
+    (shell)))
    #+end_src
    
 ** Custom Grep

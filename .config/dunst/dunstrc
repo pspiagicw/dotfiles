@@ -72,7 +72,7 @@
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = auto
+    separator_color = foreground
 
     # Sort messages by urgency.
     sort = yes
@@ -293,14 +293,14 @@
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#282a36"
-    foreground = "#ffb86c"
+    foreground = "#f8f8f2"
     timeout = 10
     # Icon for notifications with low urgency, uncomment to enable
     icon = /home/pspiagicw/.config/dunst/low.png
 
 [urgency_normal]
     background = "#282a36"
-    foreground = "#bd93f9"
+    foreground = "#f8f8f2"
     timeout = 10
     # Icon for notifications with normal urgency, uncomment to enable
     icon = /home/pspiagicw/.config/dunst/normal.png

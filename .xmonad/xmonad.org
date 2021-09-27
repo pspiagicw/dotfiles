@@ -113,7 +113,7 @@ altMask :: KeyMask
 altMask = mod1Mask
 myGapsDiff = 10
 myNormalBorderColor  = "#6272a4"
-myFocusedBorderColor = "#ff79c6"
+myFocusedBorderColor = "#ffb86c"
 myTerminal = "alacritty"
 #+end_src
 
