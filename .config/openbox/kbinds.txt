@@ -1,0 +1,75 @@
+o C-A-Left        	GoToDesktop
+o C-A-Right       	GoToDesktop
+o C-A-Up          	GoToDesktop
+o C-A-Down        	GoToDesktop
+o S-A-Left        	SendToDesktop
+o S-A-Right       	SendToDesktop
+o S-A-Up          	SendToDesktop
+o S-A-Down        	SendToDesktop
+o W-1             	GoToDesktop
+o W-2             	GoToDesktop
+o W-3             	GoToDesktop
+o W-4             	GoToDesktop
+o W-5             	GoToDesktop
+o W-6             	GoToDesktop
+o W-S-1           	SendToDesktop
+o W-S-2           	SendToDesktop
+o W-S-3           	SendToDesktop
+o W-S-4           	SendToDesktop
+o W-S-5           	SendToDesktop
+o W-S-6           	SendToDesktop
+o W-d             	ToggleShowDesktop
+o A-F4            	Close
+o W-S-c           	Close
+o W-C-r           	Reconfigure
+o A-Escape        	Lower
+o A-space         	client-menu
+o A-Tab           	NextWindow
+o W-j             	NextWindow
+o W-k             	PreviousWindow
+o A-S-Tab         	PreviousWindow
+o C-A-Tab         	NextWindow
+o W-S-Right       	DirectionalCycleWindows
+o W-S-Left        	DirectionalCycleWindows
+o W-S-Up          	DirectionalCycleWindows
+o W-S-Down        	DirectionalCycleWindows
+x XF86AudioMute   	pactl -- set-sink-volume0 0 0% ; volumenotify
+x XF86AudioNext   	mpc next
+x XF86AudioPrev   	mpc prev
+x XF86AudioPlay   	mpc toggle
+x XF86AudioStop   	mpc stop
+x XF86AudioLowerVolume	pactl -- set-sink-volume 0 -5%
+x XF86AudioRaiseVolume	pactl -- set-sink-volume 0 +5%
+x XF86MonBrightnessUp	light -A 5
+x XF86MonBrightnessDown	light -U 5
+x W-semicolon     	rofi -show run
+x W-S-semicolon   	rofi -show drun
+x A-F1            	dmenu_run
+x A-F1            	dmenu_run
+o W-t             	ToggleMaximize
+o W-S-t           	ToggleDecorations
+x W-e             	emacsclient -c
+x W-f             	emacsclient -c -e '(dired "~")'
+x W-C-j           	pactl -- set-sink-volume 0 -5% 
+x W-C-k           	pactl -- set-sink-volume 0 +5%
+x W-C-l           	betterlockscreen --lock
+x W-C-space       	dunstctl close
+x W-C-S-space     	dunstctl history-pop
+o W-S-q           	Exit
+x W-S-q           	killall tint2
+x W-Return        	alacritty
+x W-C-Return      	rofi -show window
+o W-S-h           	MoveResizeTo
+o W-S-l           	MoveResizeTo
+o W-S-k           	MoveResizeTo
+o W-S-j           	MoveResizeTo
+o W-S-h           	
+o W-KP_1          	UnmaximizeFull
+o W-KP_2          	UnmaximizeFull
+o W-KP_3          	UnmaximizeFull
+o W-KP_4          	UnmaximizeFull
+o W-KP_5          	MaximizeFull
+o W-KP_6          	UnmaximizeFull
+o W-KP_7          	UnmaximizeFull
+o W-KP_8          	UnmaximizeFull
+o W-KP_9          	UnmaximizeFull

@@ -5,7 +5,7 @@
 # Contributor: WitherCubes
 set -euo pipefail
 bssid=$(nmcli device wifi list | sed -n '1!p' | cut -b 9- | dmenu -p "Select Wifi  :" -l 20 -i | cut -d' ' -f1)
-pass=$(echo "" | dmenu -P -p "Enter Password :")
+pass=$(echo "" | dmenu -p "Enter Password :")
 if [ ! -z $pass ]
 then
     nmcli device wifi connect "$bssid" password "$pass"

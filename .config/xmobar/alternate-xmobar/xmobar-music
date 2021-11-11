@@ -1,0 +1,31 @@
+
+Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , borderColor = "#bd93f9"
+       , bgColor = "#282a36"
+       , fgColor = "#f8f2f2"
+       , borderWidth = 0
+       , border = BottomB
+       , alpha = 255
+       , position = Bottom
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/pspiagicw/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [
+		Run MPDX  ["-t",
+		    "<fc=#50fa7b><composer> <title> - <artist> (<album>) <track>/<plength> <statei> [<flags>] </fc>",
+		    "--", "-P", ">>", "-Z", "|", "-S", "><"]  10 "mpdinfo",
+		Run MPDX  ["-t",
+		    "<fc=#ffb86c><bar></fc>" , "--bwidth" , "272" , "--bfore" , "=" , "--bback" , "."
+		    ]  10 "mpdbar"
+
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %mpdbar% } %mpdinfo% { "
+       }

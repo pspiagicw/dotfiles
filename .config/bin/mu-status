@@ -1,0 +1,6 @@
+#!/bin/sh
+total_work=`mu find maildir:/work/INBOX | wc -l`
+total_college=`mu find maildir:/college/INBOX | wc -l`
+unread_work=`mu find maildir:/work/INBOX AND flag:unread | wc -l`
+unread_college=`mu find maildir:/college/INBOX AND flag:unread | wc -l`
+echo "$unread_work/$total_work|$unread_college/$total_college"

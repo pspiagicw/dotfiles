@@ -1,5 +1,10 @@
 #!/bin/sh
 temp=`nvidia-smi | awk '/Default/{ print int($3) }'`
+if [ "$1" = "--integer" ]
+then
+    echo "${temp}°C"
+    exit 0
+fi
 if [ $temp -le 50 ]
 then
     echo "<fc=#50fa7b>+${temp}°C</fc>"

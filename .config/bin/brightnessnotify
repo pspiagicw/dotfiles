@@ -1,0 +1,5 @@
+#!/bin/sh
+
+brightness=`light`
+echo $brightness
+notify-send --expire-time=450 -h int:value:$brightness --urgency=normal "Brightness"

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- <!DOCTYPE menu [ -->
+<!--     <!ENTITY icons "/home/pspiagicw/.config/openbox/icons"> -->
+<!--     <!ENTITY pipes "/home/pspiagicw/.config/openbox/pipemenus"> -->
+<!-- ]> -->
 <openbox_menu xmlns="http://openbox.org/3.4/menu">
 
 <menu id="apps-accessories-menu" label="Accessories">
@@ -30,8 +34,7 @@
       <startupnotify>
         <enabled>yes</enabled>
         <wmclass>Emacs</wmclass>
-      </startupnotify>
-    </action>
+      </startupnotify> </action>
   </item>
 </menu>
 
@@ -57,33 +60,6 @@
       <startupnotify>
         <enabled>yes</enabled>
         <wmclass>qutebrowser</wmclass>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Neomutt">
-    <action name="Execute">
-      <command>alacritty -e neomutt</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-        <wmclass>neomutt</wmclass>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Weechat">
-    <action name="Execute">
-      <command>alacritty -e weechat</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-        <wmclass>weechat</wmclass>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Network Manager">
-    <action name="Execute">
-      <command>alacritty -e nmtui</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-        <wmclass>Network Manager</wmclass>
       </startupnotify>
     </action>
   </item>
@@ -144,22 +120,6 @@
       </startupnotify>
     </action>
   </item>
-  <item label="Pulsemixer">
-    <action name="Execute">
-      <command>alacritty -e pulsemixer</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
-  <item label="Ncmpcpp">
-    <action name="Execute">
-      <command>alacritty -e ncmpcpp</command>
-      <startupnotify>
-        <enabled>yes</enabled>
-      </startupnotify>
-    </action>
-  </item>
 </menu>
 
 <menu id="apps-fileman-menu" label="File Managers">
@@ -193,24 +153,91 @@
 </menu>
 
 <menu id="root-menu" label="Openbox 3">
+  <item icon="&icons;/terminal.png" label="Terminal Emulator">
+    <action name="Execute">
+      <command>alacritty</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item icon="&icons;/browser.png" label="Web Browser">
+    <action name="Execute">
+      <command>qutebrowser</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item icon="&icons;/filemanager.png" label="File Manager">
+    <action name="Execute">
+      <command>emacsclient -c -e '(dired "~")'</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
+  <item icon="&icons;/editor.png" label="Text Editor">
+    <action name="Execute">
+      <command>emacsclient -c</command>
+      <startupnotify>
+        <enabled>yes</enabled>
+      </startupnotify>
+    </action>
+  </item>
   <separator label="Applications" />
-  <menu id="apps-accessories-menu"/>
-  <menu id="apps-editors-menu"/>
-  <menu id="apps-graphics-menu"/>
-  <menu id="apps-net-menu"/>
-  <menu id="apps-office-menu"/>
-  <menu id="apps-multimedia-menu"/>
-  <menu id="apps-term-menu"/>
-  <menu id="apps-fileman-menu"/>
-  <menu id="apps-gaming-menu"/>
+  <menu icon="&icons;/apps.png" label="Applications" id="rootMenu">
+    <menu id="apps-accessories-menu"/>
+    <menu id="apps-editors-menu"/>
+    <menu id="apps-graphics-menu"/>
+    <menu id="apps-net-menu"/>
+    <menu id="apps-office-menu"/>
+    <menu id="apps-multimedia-menu"/>
+    <menu id="apps-term-menu"/>
+    <menu id="apps-fileman-menu"/>
+    <menu id="apps-gaming-menu"/>
+  </menu>
+  <menu icon="&icons;/cmd.png" id="quick-commands" label="Quick CMDs">
+    <separator label="Quick Commands"/>
+    <menu id="PacmanPipeMenu" execute="&pipes;/ac-pacman" label="Package Management"/>
+    <menu id="FilesPipeMenu" execute="&pipes;/ac-files" label="Files &amp; Directories"/>
+    <menu id="SysdPipeMenu" execute="&pipes;/ac-systemd" label="Systemd &amp; Services"/>
+  </menu>
   <separator label="System" />
-  <menu id="system-menu"/>
+  <!-- <menu id="system-menu"/> -->
   <separator />
-  <item label="Log Out">
+  <item icon="&icons;/sys-exit.png" label="Log Out">
     <action name="Exit">
       <prompt>yes</prompt>
     </action>
   </item>
+  <menu icon="&icons;/sys-poweroff.png" id="Exit" label="System">
+    <menu icon="&icons;/stats.png" id="SystemPipeMenu" execute="&pipes;/ac-sysinfo" label="Stats"/>
+    <separator/>
+    <item icon="&icons;/sys-exit.png" label="Logout">
+      <action name="Execute">
+	<command>/usr/share/archcraft/openbox/pipemenus/ac-powermenu --logout</command>
+      </action>
+    </item>
+    <separator/>
+    <item icon="&icons;/sys-sleep.png" label="Suspend">
+      <action name="Execute">
+	<command>/usr/share/archcraft/openbox/pipemenus/ac-powermenu --suspent</command>
+      </action>
+    </item>
+    <separator/>
+    <item icon="&icons;/sys-reboot.png" label="Reboot">
+      <action name="Execute">
+	<command>/usr/share/archcraft/openbox/pipemenus/ac-powermenu --reboot</command>
+      </action>
+    </item>
+    <separator/>
+    <item icon="&icons;/sys-poweroff-alt.png" label="Shutdown">
+      <action name="Execute">
+	<command>/usr/share/archcraft/openbox/pipemenus/ac-powermenu --shutdown</command>
+      </action>
+    </item>
+  </menu>
 </menu>
 
 </openbox_menu>

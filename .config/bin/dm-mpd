@@ -1,0 +1,15 @@
+#!/bin/sh
+DMENU='dmenu -i'
+choice=$(echo -e "start-server\nstop-server" | $DMENU )
+
+startserver() {
+    killall mpd
+    mpd &
+    sleep 2
+    mpd-mpris &
+}
+    
+case "$choice" in
+start-server) startserver ;;
+stop-server) killall mpd ;;
+esac

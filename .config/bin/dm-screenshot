@@ -7,7 +7,8 @@ name="ScreenShot-$(date | awk '{ print $4 }').png"
 
 
 shownotification () {
-    notify-send --urgency=normal --icon=~/.config/dunst/screenshot.svg "Screenshot" "Screenshot Taken Copied to Clipboard!"
+    sleep 3
+    notify-send --urgency=normal --icon=~/.config/dunst/screenshot.png "Screenshot" "Screenshot Taken Copied to Clipboard!"
 }
 case "$choice" in
     fullscreen) maim ~/pictures/screenshots/"Screenshot-$(date +%s).png" | xclip -selection clipboard -t image/png; shownotification ;;

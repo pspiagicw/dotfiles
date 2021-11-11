@@ -1,5 +1,8 @@
 #+title: Literate Emacs Configuration
 #+author: pspiagicw
+#+latex_class: article
+#+latex_class_options: [letterpaper]
+#+optioncs: toc:t
 #+property: header-args:emacs-lisp :tangle ~/.config/emacs/init.el
 * Emacs Config
   This is my Emacs Configuration , written as a literate config in Org Mode.
@@ -42,8 +45,10 @@ paru -S mbsync-git and mu
   
 ** Backup and Autosave
    #+begin_src emacs-lisp
-(setq make-backup-files nil)
 (setq auto-save-default nil)
+(setq make-backup-files t)
+(setq backup-directory-alist '(("." . "~/.config/emacs/backup-files")))
+(setq backup-by-copying t)
    #+end_src
    
 ** Custom.el
@@ -67,7 +72,38 @@ paru -S mbsync-git and mu
 (defalias 'y-or-n-p 'yes-or-no-p)
    #+end_src
   
-  
+** Unique Buffer Names
+   #+begin_src emacs-lisp
+(use-package uniquify
+  :ensure nil
+  :config
+  (setq uniquify-buffer-name-style 'forward)
+  (setq uniquify-separator "/")
+  (setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
+  (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+)
+
+   #+end_src
+** Mouse Default
+   These settings modify how Emacs works when interacted with mouse
+   Use File Dialog
+   Prevent Emacs from using GUI file dialog when using mouse
+     #+begin_src emacs-lisp
+       (setq use-file-dialog nil)
+       
+     #+end_src
+   Use Dialog Box
+   Prevent Emacs from using GUI 'y-or-n' dialog when using mouse
+   #+begin_src emacs-lisp
+     (setq use-dialog-box nil)
+     
+   #+end_src
+** Terminal Defaults
+   #+begin_src emacs-lisp
+     (setq-default shell-file-name "/bin/bash")
+     (setq explicit-shell-file-name "/bin/bash")
+     
+   #+end_src
 * MELPA and Org-Repo
   Melpa ( Milkpostman's emacs lisp package archive) is a repository of Emacs packages .
   Emacs has GNU ELPA Configuration by default , but it requires registering the package with GNU.
@@ -111,8 +147,8 @@ paru -S mbsync-git and mu
    Thus here it assumes that it has to download the package , unless told otherwise.
    #+begin_src emacs-lisp
 (use-package use-package
-  :config
-  (setq use-package-always-ensure t)
+  :custom
+  (use-package-always-ensure t)
 )
    #+end_src
    
@@ -128,14 +164,15 @@ paru -S mbsync-git and mu
    #+begin_src emacs-lisp
 (use-package emacs
   :ensure nil
+  :custom
+  (tooltip-use-echo-area t)
+  (inhibit-startup-message t)
   :config
-    (scroll-bar-mode -1)
-    (tool-bar-mode -1)
-    (menu-bar-mode -1)
-    (tooltip-mode -1)
-    (setq tooltip-use-echo-area t)
-    (setq inhibit-startup-message t)
- )
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (tooltip-mode -1)
+)
    #+end_src
    
 ** Fonts
@@ -144,8 +181,11 @@ paru -S mbsync-git and mu
    It is extremely readable and availabe as a TTF file , thus portable or downloadable throught the Internet.
 
    I also use the ~all-the-icons~ package which loads up icons loadable into text.It is needed by ~doom-modeline~.
+   
    #+begin_src emacs-lisp
-(setq default-frame-alist '((font . "JetBrains Mono 7")))
+(dolist (face '(default fixed-pitch))
+  (set-face-attribute `,face nil :font "JetBrains Mono 8")
+)
    #+end_src
 
    
@@ -163,16 +203,9 @@ paru -S mbsync-git and mu
    This means I probably have a lot of packages installed , all of them are themes
    #+begin_src emacs-lisp
 (use-package doom-themes)
-(use-package modus-themes
-  :config
-  (setq modus-themes-no-mixed-fonts t
-	modus-themes-prompts '(intense gray)
-	modus-themes-mode-line '(nil)
-	modus-themes-completion '(opinionated)
-	modus-themes-org-blocks '(gray-background)
-	)
-  )
 (use-package dracula-theme)
+(load-theme 'doom-nord t)
+
    #+end_src
 
 
@@ -182,13 +215,13 @@ paru -S mbsync-git and mu
    #+begin_src emacs-lisp
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
-  :init
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-project-detection 'projectile)
-  (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-buffer-modification-icon t)
-  )
+  :custom
+  (doom-modeline-icon t)
+  (doom-modeline-project-detection 'projectile)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-modification-icon t)
+)
    #+end_src
    
 ** Emacs Dashboard
@@ -198,13 +231,13 @@ paru -S mbsync-git and mu
 (use-package dashboard
   :config
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-  (setq dashboard-startup-banner '2)
+  (setq dashboard-startup-banner "~/.config/emacs/doom.txt")
   (setq dashboard-center-content t)
   (setq dashboard-show-shortcuts nil)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-navigator t)
-  (setq dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  (setq dashboard-projects-switch-function 'project-switch-project)
   (dashboard-setup-startup-hook)
   )
    #+end_src
@@ -215,9 +248,9 @@ paru -S mbsync-git and mu
    #+begin_src emacs-lisp
 (use-package which-key
   :init (which-key-mode)
-  :config
-  (setq which-key-idle-delay 0.3)
-  (setq which-key-popup-type 'minibuffer)
+  :custom
+  (which-key-idle-delay 0.3)
+  (which-key-popup-type 'minibuffer)
 )
    #+end_src
    
@@ -278,12 +311,17 @@ paru -S mbsync-git and mu
 	 (window-width . 0.25)
 	 (side . right)
 	 (slot . 0))
-	("\\.*eww.*\\*"
+	;; ("\\.*eww.*\\*"
+	;;  (display-buffer-in-side-window)
+	;;  (window-width . 0.25)
+	;;  (side . right)
+	;;  (slot . 0))
+	("*\\.*terminal.*\\*"
 	 (display-buffer-in-side-window)
 	 (window-width . 0.25)
 	 (side . right)
 	 (slot . 0))
-	("*\\.*terminal.*\\*"
+	("*\\.*term-.*\\*"
 	 (display-buffer-in-side-window)
 	 (window-width . 0.25)
 	 (side . right)
@@ -301,10 +339,9 @@ paru -S mbsync-git and mu
 	("\\*.*\\(e?shell\\|v?term\\).*"
 	 (display-buffer-reuse-mode-window display-buffer-at-bottom)
 	 (window-height . 0.2))
-	;;  )
+	  )
 	)
 
-      )
    #+end_src
   
 * Evil Mode
@@ -323,33 +360,26 @@ paru -S mbsync-git and mu
    This covers all the standard Emacs Buffers and is definately better the inbuilt Emacs Vi Emulation!
    #+begin_src emacs-lisp
 (use-package evil
-  :init
-  (setq evil-want-integration nil)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump t)
-  (setq evil-want-C-w-delete t)
-  (setq evil-want-C-u-delete t)
-  (setq evil-want-minibuffer nil)
+  :custom
+  (evil-want-integration nil)
+  (evil-want-keybinding nil)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump t)
+  (evil-want-C-w-delete t)
+  (evil-want-C-u-delete t)
+  (evil-want-minibuffer nil)
+  (evil-undo-system 'undo-tree)
   :config
   (evil-set-initial-state 'simple-mpc-mode 'emacs)
   (evil-set-initial-state 'simple-mpc-query-mode 'emacs)
   (evil-set-initial-state 'simple-mpc-current-playlist-mode 'emacs)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (define-key evil-insert-state-map (kbd "C-w") 'evil-delete-backward-word)
 
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "M-l") 'evil-window-right)
-  (define-key evil-normal-state-map (kbd "M-h") 'evil-window-left)
-  (define-key evil-normal-state-map (kbd "M-j") 'evil-window-down)
-  (define-key evil-normal-state-map (kbd "M-k") 'evil-window-up)
-  (define-key evil-normal-state-map (kbd "/") 'counsel-grep-or-swiper)
-  (define-key evil-normal-state-map (kbd "?") 'counsel-grep-or-swiper)
-  (define-key evil-insert-state-map (kbd "M-l") 'evil-window-right)
-  (define-key evil-insert-state-map (kbd "M-h") 'evil-window-left)
-  (define-key evil-insert-state-map (kbd "M-j") 'evil-window-down)
-  (define-key evil-insert-state-map (kbd "M-k") 'evil-window-up)
-  ;; (define-key evil-normal-sate-map (kbd ":") 'counsel-M-x)
+  (define-key evil-normal-state-map (kbd "/") 'evil-search-forward)
+  (define-key evil-normal-state-map (kbd "?") 'evil-search-backward)
 
   ;; this set's up the messages-buffer-mode to normal
   (evil-set-initial-state 'messages-buffer-mode 'normal)
@@ -387,6 +417,7 @@ paru -S mbsync-git and mu
    This is also a port of Tim Pope's package vim-commentary.
    #+begin_src emacs-lisp
 (use-package evil-commentary
+  :after evil
   :config
   (evil-commentary-mode 1)
 )
@@ -397,6 +428,7 @@ paru -S mbsync-git and mu
    These pairs can include ~if .. else~ and ~try .. catch~ blocks.
    #+begin_src emacs-lisp
 (use-package evil-matchit
+  :after evil
   :config
   (global-evil-matchit-mode 1)
 )
@@ -407,6 +439,7 @@ paru -S mbsync-git and mu
    This is a inbuilt ability of Vim.
    #+begin_src emacs-lisp
 (use-package evil-numbers
+  :after evil
   :config
   (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-x") 'evil-numbers/dec-at-pt)
@@ -418,6 +451,7 @@ paru -S mbsync-git and mu
    This is useful while working with large amount of codes. This basically improvides visibility of actions done on code.
    #+begin_src emacs-lisp
 (use-package evil-goggles
+  :after evil
   :config
   (evil-goggles-mode)
   (evil-goggles-use-diff-faces)
@@ -447,8 +481,15 @@ paru -S mbsync-git and mu
 )
 
    #+end_src
-** TODO Evil Undo
+** DONE Evil Undo
 
+   This is the package needed for redo and undo functionality in Evil Mode.
+   #+begin_src emacs-lisp
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode 1)
+ )
+   #+end_src
 * Completion Framework
   Completion Framwork is a ability of an editor to provide functionality in the form the a list.
   This list is filtered using the input provided by the user. This list dynamically updates on each key press.
@@ -465,48 +506,70 @@ paru -S mbsync-git and mu
   They may be more written and we can't compare all of them.Although if anytime in the future , there is a job of testing packages for Emacs , I would be interested.
 
   
-** Ivy Setup
+** Ivy-Mode [Now: Using Vertico]
    Ivy/Counsel is setup using use-package as usual . It has been populated with Vim Keybindings and works as expected.
    #+begin_src emacs-lisp
-(use-package counsel
-  :bind (
-	 ("C-s" . swiper)
-	 ("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-switch-buffer)
-	 ("C-w" . backward-kill-word)
-	 ("C-h" . delete-backward-char)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . counsel-minibuffer-history)
-	 :map ivy-minibuffer-map
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 ("C-<return>" . ivy-alt-done)
-	 :map ivy-switch-buffer-map
-	 ("C-d" . ivy-switch-buffer-kill))
-  ("C-j" . ivy-next-line)
-  ("C-k" . ivy-previous-line)
-  :config
-  (counsel-mode 1)
-  (setq ivy-re-builders-alist
-	'((t      . ivy--regex-plus)))
-  )
+     ;; (use-package ivy
+     ;;   :bind (
+     ;; 	 ("C-w" . backward-kill-word)
+     ;; 	 ("C-h" . delete-backward-char)
+     ;; 	 :map ivy-minibuffer-map
+     ;; 	 ("C-l" . ivy-alt-done)
+     ;; 	 ("C-j" . ivy-next-line)
+     ;; 	 ("C-k" . ivy-previous-line)
+     ;; 	 ("C-<return>" . ivy-alt-done)
+     ;; 	 :map ivy-switch-buffer-map
+     ;; 	 ("C-d" . ivy-switch-buffer-kill))
+
+     ;;   ("C-j" . ivy-next-line)
+     ;;   ("C-k" . ivy-previous-line)
+     ;;   :config
+     ;;   (setq ivy-re-builders-alist
+     ;; 	'((t      . ivy--regex-plus)))
+     ;;   )
+
+(use-package vertico
+  :bind (:map vertico-map
+	      ("C-j" . vertico-next)
+	      ("C-k" . vertico-previous)
+	      ("C-w" . backward-kill-word)
+	      ("C-h" . delete-backward-char)
+	      ))
 	 #+end_src
    
-** Ivy Rich
+** Ivy Rich [Now: Marginalia]
    Ivy Rich is a formatting library complementing Ivy , it adds useful description in the ivy-buffer , as a help.
    It also adds color code for help.
 
    Althought it is observed to slow down the completion buffer while changing between a lot of buffers , it stays disabled , but remains installed.
 
+   Edit: Now I am using Marginalia for above features.
+
    #+begin_src emacs-lisp
-(use-package ivy-rich)
+(use-package marginalia
+  :config
+  (marginalia-mode 1)
+)
+
    #+end_src
+** Completion Commands
+   All the completion commands independent of any completion framework is provided by ~Consult~.
+   #+begin_src emacs-lisp
+(use-package consult)
+   #+end_src
+** Completion Styles
+   This defines the style of completion , this governs how each completion candidate is considered while listing in the completion buffer.
+   #+begin_src emacs-lisp
+(use-package orderless
+  :config
+  (setq completion-styles '(orderless))
+)
+   #+end_src
+   
 * Programming Languages
   Programming Languages are the reason I spent customizing my editor.
   Here are the programming language based configurations!
-
+  
   These do not include keybindings according to each programming language , but include language specific settings
   like indentation.
 ** Indentation and Whitespace
@@ -553,26 +616,35 @@ paru -S mbsync-git and mu
    #+begin_src emacs-lisp
 (use-package lua-mode)
    #+end_src
-   
+** Golang Mode
+   I use Golang as a low-level language
+   #+begin_src emacs-lisp
+(use-package go-mode)
+   #+end_src
+   For integrating with org-mode
+   #+begin_src emacs-lisp
+(use-package ob-go)
+   #+end_src
 ** Projectile
    Projectile is a library used to manage code projects. It provides many useful functions and hooks to interface with the project.
    It is used a lot in my keybindings.They provide fast switching between projects
    #+begin_src emacs-lisp
-(use-package projectile
-  :config
-  :custom
-  (projectile-completion-system 'ivy)
-  (setq projectile-project-search-path '("~/code/python/projects/" "~/code/c/projects/"))
-  (setq projectile-switch-project-action #'projectile-dired)
-  (projectile-mode 1)
-)
+;; (use-package projectile
+;;   :config
+;;   (projectile-mode 1)
+;;   :custom
+;;   (projectile-completion-system 'ivy)
+;;   (projectile-project-search-path '("~/code/python/projects/" "~/code/c/projects/"))
+;;   (projectile-switch-project-action #'projectile-dired)
+;; )
    #+end_src
 
    #+begin_src emacs-lisp
-(use-package counsel-projectile
-  :config
-  (counsel-projectile-mode 1)
-)
+;; (use-package counsel-projectile
+;;   :after projectile
+;;   :config
+;;   (counsel-projectile-mode 1)
+;; )
    #+end_src
    
 ** Magit
@@ -584,6 +656,11 @@ paru -S mbsync-git and mu
    #+end_src
 
    
+** Jupyter Notebooks
+   Jupyter notebook allow running kernels of any language.I use it for Machine Learning and Deep Learning stuff in Python
+   #+begin_src emacs-lisp
+(use-package jupyter)
+   #+end_src
   
 ** LSP
    Language Server Protocol is the new age intellisense system developed along with Microsoft.
@@ -599,14 +676,13 @@ paru -S mbsync-git and mu
   :config
   (lsp-enable-which-key-integration t)
 )
+(use-package lsp-jedi
+)
    #+end_src
    
    
     #+begin_src emacs-lisp
-(use-package lsp-ui
-  :config
-  (lsp-ui-mode 1)
-)
+;; (use-package lsp-ui)
 
     #+end_src
 
@@ -615,29 +691,30 @@ paru -S mbsync-git and mu
    Company can take in inputs from any no of sources and it provides useful keybindings to autocomplete.
    #+begin_src emacs-lisp
 (use-package company
+  :commands (company-mode)
   :config
-  (setq company-minimum-prefix-length 1
-	company-idle-delay 0.0
-	company-mode-selection-wrap-around t
-	)
-  (setq company-backends '((company-lsp)                                                                                                                                                               
-			   (company-capf)                                                                                                                                                                                       
-			   (company-files)                                                                                                                                                                                      
-			   (company-dabbrev-code company-gtags company-etags company-keywords)                                                                                                                                  
-			   (company-bbdb)                                                                                                                                                                                       
-			   (company-eclim)                                                                                                                                                                                      
-			   (company-semantic)                                                                                                                                                                                   
-			   (company-clang)                                                                                                                                                                                      
-			   (company-xcode)                                                                                                                                                                                      
-			   (company-cmake)                                                                                                                                                                                      
-			   (company-oddmuse)                                                                                                                                                                                    
-			   (company-dabbrev)) 
-	)
+  (company-tng-configure-default)
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0)
+  (company-mode-selection-wrap-around t)
+  (company-backends '((company-lsp)                                                                                                                                                               
+		      (company-files)                                                                                                                                                                                      
+		      (company-capf)                                                                                                                                                                                      
+		      (company-dabbrev)                                                                                                                                                                                      
+		      (company-dabbrev-code company-gtags company-etags company-keywords)                                                                                                                                  
+		      (company-semantic)                                                                                                                                                                                   
+		      (company-clang)                                                                                                                                                                                      
+		      (company-cmake)                                                                                                                                                                                      
+		      (company-dabbrev)) 
+		    )
   )
    #+end_src
 
    #+begin_src emacs-lisp
-(use-package company-quickhelp)
+(use-package company-quickhelp
+  :after company
+  )
    #+end_src
    
 * Org Mode
@@ -646,8 +723,8 @@ paru -S mbsync-git and mu
   
   #+begin_src emacs-lisp
 (use-package org
-  :config
-  (setq org-confirm-elisp-link-function nil)
+  :custom
+  (org-confirm-elisp-link-function nil)
 )
   #+end_src
 
@@ -662,15 +739,21 @@ paru -S mbsync-git and mu
 (use-package org-tempo
   :ensure nil
   :config
+  (push '("conf-unix" . conf-unix ) org-src-lang-modes)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
      (C . t)
      (shell . t)
-     (haskell . t)))
-  (setq org-src-preserve-indentation t)
-  (setq org-structure-template-alist
+     (haskell . t)
+     (sql . t)
+     (jupyter . t)
+     (go . t)
+))
+  :custom
+  (org-src-preserve-indentation t)
+  (org-structure-template-alist
 	'(("a" . "export ascii")
 	  ("c" . "center")
 	  ("C" . "comment")
@@ -685,18 +768,81 @@ paru -S mbsync-git and mu
 	  ("py" . "src python")
 	  ("el" . "src emacs-lisp")
 	  ("hs" . "src haskell")
+	  ("sq" . "src sql")
+	  ("ml" . "src jupyter-python :session default :async yes")
 	  )
 
 	)
-  (push '("conf-unix" . conf-unix ) org-src-lang-modes)
+
+
   )
   #+end_src
   Org Bullets makes the heading is org-mode a little better to look at.
   It hides all the stars in a heading and shows a special symbol in place of it.
+  
+  Org Roam is a knowledge preservation system , written in Org Mode. It uses SQLite database to keep backlinks and thus allows for interconnected non-hierarchial data.
   #+begin_src emacs-lisp
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode)
+(use-package org-roam
+  :init
+  (setq org-roam-v2-ack t)
+  :config
+  (setq org-roam-directory "~/documents/org/org-roam")
+  (setq org-roam-completion-everywhere t)
+  (org-roam-setup)
+)
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'override
+ :states 'normal
+ "r" '(:ignore t :which-key "Org Roam")
+ "ri" '(org-roam-node-insert :which-key "Insert Org Roam Node")
+ "rf" '(org-roam-node-find :which-key "Find Org Roam Node")
+ "rl" '(org-roam-buffer-toggle)
+ )
+  #+end_src
+  Org Capture allows us to capture stuff for futher inspection or rather a TODO with a schedule , etc.
+  Arrange meetings and so much more.
+
+  #+begin_src emacs-lisp
+(use-package org-capture
+  :ensure nil
+  :config
+  (setq org-directory "~/documents/org")
+  (setq org-agenda-files '("~/documents/org/tasks"))
+  (setq org-capture-templates
+	'(
+	  ("c" "College Task" entry
+	   (file+headline "tasks/college.org" "College Tasks")
+	   "* TODO Task: %?")
+	  ("w" "Work Task" entry
+	   (file+headline "tasks/work.org" "Work Tasks")
+	   "* TODO Task: %?")
+	  ("n" "Next Task" entry
+	   (file+headline "tasks/next.org" "Next Tasks")
+	   "* NEXT Task: %? \nDEADLINE: %t")
+	  ("r" "Read Task" entry
+	   (file+headline "tasks/read.org" "Things to Read")
+	   "* RESEARCH %?")
+	  ("m" "Watch Task" entry
+	   (file+headline "tasks/watch.org" "Things to Watch Later")
+	   "* WATCH %?")
+	  ("t" "General Tasks" entry
+	   (file+headline "tasks/general.org" "General Tasks")
+	   "* TODO Task: %?")
+	  )
+	)
+  (setq org-todo-keywords
+	'((sequence "TODO" "RESEARCH" "NEXT" "WATCH" "|" "DONE" "CANCELLED")))
   )
+  #+end_src
+  Ox Hugo allows exporting ORG Mode into HUGO compatible markdownd
+  #+begin_src emacs-lisp
+
+(use-package ox-hugo
+  :after ox
+  :config
+  (setq org-hugo-base-dir "~/documents/personalblog")
+)
   #+end_src
 * Email
   My Email is controlled using ~mu4e~ and ~mbsync~.
@@ -722,11 +868,19 @@ paru -S mbsync-git mu
     * SMTP Server : All my emails are handled by gmail so I need only one setting for smtp
     * SMTP Service: Gmail by default uses ssl , which has the port 465
     * SMTP Stream Type: This declares the type of encryption used while contacting the server.
+    Edit: For Now Mail sending handled by msmtp!
       #+begin_src emacs-lisp
 
-  (setq smtpmail-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-service 465
-	smtpmail-stream-type 'ssl)
+  ;; (setq smtpmail-smtp-server "smtp.gmail.com"
+  ;; 	smtpmail-smtp-service 465
+  ;; 	send-mail-function 'smtpmail-send-it
+  ;; 	smtpmail-stream-type 'ssl)
+(setq send-mail-function 'sendmail-send-it
+      message-send-mail-function 'message-send-mail-with-sendmail
+      sendmail-program "/usr/bin/msmtp"
+      message-sendmail-extra-arguments '("--read-envelope-from")
+      message-sendmail-f-is-evil 't
+       )
       #+end_src
   * Mu4e settings:
     * Mu4e Update Intervals : Interval after which email is reloaded
@@ -746,6 +900,7 @@ paru -S mbsync-git mu
   (setq mu4e-compose-format-flowed t)
   (setq mu4e-context-policy 'always-ask)
 
+
 #+end_src
  * Mu4e Contexts: These are the main bits if you have more than one account.
    It is a list of mu4e context , which store the variables related to the indivisual mail accounts.
@@ -759,6 +914,7 @@ paru -S mbsync-git mu
      #+begin_src emacs-lisp
 	 (make-mu4e-context
 	  :name "work"
+	  :leave-func (lambda () (mu4e-clear-caches))
 	  :match-func
 	  (lambda (msg)
 	    (when msg
@@ -784,6 +940,7 @@ paru -S mbsync-git mu
      #+begin_src emacs-lisp
 	 (make-mu4e-context
 	  :name "college"
+	  :leave-func (lambda () (mu4e-clear-caches))
 	  :match-func
 	  (lambda (msg)
 	    (when msg
@@ -810,6 +967,7 @@ paru -S mbsync-git mu
 #+begin_src emacs-lisp
 	 (make-mu4e-context
 	  :name "personal"
+	  :leave-func (lambda () (mu4e-clear-caches))
 	  :match-func
 	  (lambda (msg)
 	    (when msg
@@ -833,8 +991,6 @@ paru -S mbsync-git mu
   )
   #+end_src
 
-  
-  
 * RSS Feeds
   RSS Feeds are the oldy but goldy way for news .
   In simple words , it is a XML file with a list of all the current news and links provided for more information.
@@ -843,9 +999,9 @@ paru -S mbsync-git mu
   I also customized it's behaviour to include some unique ways of opening urls.
   #+begin_src emacs-lisp
 (use-package elfeed
-  :config
-  (setq elfeed-show-entry-switch #'elfeed-display-buffer)
-  (setq elfeed-feeds
+  :custom
+  (elfeed-show-entry-switch #'elfeed-display-buffer)
+  (elfeed-feeds
 	'(
 	  ( "https://www.techrepublic.com/rssfeeds/articles/" article tech )
 	  ( "https://opensource.com/feed " opensource tech )
@@ -879,9 +1035,9 @@ paru -S mbsync-git mu
 	  ( "https://www.reddit.com/r/unixporn/.rss" linux reddit )
 	  ( "https://www.reddit.com/r/listentothis/.rss" reddit )
 	  ( "https://drewdevault.com/blog/index.xml" blog )
-	  ( "https://unixsheikh.com/feed.rss" blog )
-	  ( "https://mikestone.me/feed.xml" blog )
-	  ( "https://www.phoronix.com/rss.php" )
+	  ( "https://unixsheikh.com/feed.rss" blog tech)
+	  ( "https://mikestone.me/feed.xml" blog tech)
+	  ( "https://www.phoronix.com/rss.php" news)
 	  ( "https://fedoramagazine.org/feed/" linux news)
 	  ( "https://robertheaton.com/feed" blog )
 	  ( "https://reddit.com/r/vimkeyboard/.rss" linux  reddit)
@@ -892,11 +1048,11 @@ paru -S mbsync-git mu
 	  ( "https://betanews.com/feed" news )
 	  ( "https://www.computerworld.com/category/linux/index.rss" news )
 	  ( "https://youtube.com/feeds/videos.xml?channel_id=UC88tlMjiS7kf8uhPWyBTn_A"  youtube)
-	  ( "http://www.polygon.com/rss/index.xml" blog )
+	  ( "http://www.polygon.com/rss/index.xml" news blog )
 	  ( "http://www.dumbingofage.com/feed/" blog )
 	  ( "http://www.smbc-comics.com/rss.php" blog )
 	  ( "http://feeds.feedburner.com/codinghorror" tech news)
-	  ( "https://news.ycombinator.com/rss" )
+	  ( "https://news.ycombinator.com/rss" news)
 	  ( "http://waitbutwhy.com/feed" blog )
 	  ( "http://www.gunnerkrigg.com/rss.xml" blog)
 	  ( "https://reddit.com/r/technology/.rss"  tech  reddit)
@@ -918,12 +1074,18 @@ paru -S mbsync-git mu
 	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCXPHFM88IlFn68OmLwtPmZA" youtube )
 	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCBa659QWEk1AI5Tg--mrJ2A" youtube )
 	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ" youtube )
+	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg" youtube )
+	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCbfYPyITQ-7l4upoX8nvctg" youtube )
+	  ( "https://youtube.com/feeds/videos.xml?channel_id=UCEXtPiqFrcdzFRKqwazI1NA" youtube )
 	  ( "https://pspiagicw.github.io/rss.xml" personal )
-	  )
+          ("https://colekillian.com/index.xml" tech blog)
+          ( "https://nullprogram.com/feed/" tech blog)
+          ( "https://sachachua.com/blog/category/emacs-news/feed/" emacs news)
+
 	)
   )
+)
   #+end_src
-
   
 * IRC
   IRC is a old protocol for chatting.
@@ -934,15 +1096,14 @@ paru -S mbsync-git mu
   #+begin_src emacs-lisp
 (use-package erc
   :ensure nil
-  :config
-  (setq erc-server "irc.libera.chat"
-	erc-nick "pspiagicw"
-	erc-user-full-name "pspiagicw"
-	erc-track-shorten-start 8
-	erc-kill-buffer-on-part t
-	erc-fill-functional 'erc-fill-static
-	erc-fill-static-center 22
-	)
+  :custom
+  (erc-server "irc.libera.chat")
+  (erc-nick "pspiagicw")
+  (erc-user-full-name "pspiagicw")
+  (erc-track-shorten-start 8)
+  (erc-kill-buffer-on-part t)
+  (erc-fill-functional 'erc-fill-static)
+  (erc-fill-static-center 22)
   )
   #+end_src
   
@@ -954,12 +1115,20 @@ paru -S mbsync-git mu
   * Bulk Operations on Files
   * Change modes , owners of Files
 
+  Dired Dwim Target Allows Drag-n-Drop type copy and rename functionality
+  #+begin_src emacs-lisp
+(use-package dired
+  :ensure nil
+  :config
+  (setq dired-dwim-target t)
+  )
+
+  #+end_src
   Dired by default is purely text representation
   But we can extend by using ~dired-icons~ which add icons in Dired.
   #+begin_src emacs-lisp
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode)
-)
+;; (use-package all-the-icons-dired
+;; )
   #+end_src
   
   Dired also has support for toggling visiblity of files according to a regex.
@@ -979,7 +1148,12 @@ paru -S mbsync-git mu
   #+begin_src emacs-lisp
 (use-package eww
   :ensure nil
-)
+  :custom
+  (shr-use-fonts nil)
+  (shr-use-colors t)
+  (shr-indentation 2)
+  (shr-width 150)
+  )
   #+end_src
 
   #+begin_src emacs-lisp
@@ -988,20 +1162,6 @@ paru -S mbsync-git mu
 (advice-add 'eww-forward-url :after #'prot-eww--rename-buffer)
   #+end_src
 
-  #+begin_src emacs-lisp
-(setq
- shr-use-fonts nil
- shr-use-colors t
- shr-indentation 2
- shr-width 150
- )
-  #+end_src
-
-  #+begin_src emacs-lisp
-
-(use-package olivetti)
-(add-hook 'eww-mode-hook (lambda () (olivetti-mode)))
-  #+end_src
 
   #+begin_src emacs-lisp
 (setq browse-url-browser-function 'custom-browse-url)
@@ -1010,6 +1170,41 @@ paru -S mbsync-git mu
   #+end_src
 
   If you want a proper GUI web browser , look at Emacs Application Framework(EAF).
+  
+* Buffer Management
+  The following section allows us to customize the buffer system of Emacs.
+  This includes ~ibuffer~ and buffer-naming in general
+  #+begin_src emacs-lisp
+(use-package ibuffer
+  :ensure nil
+  :config
+    (setq ibuffer-saved-filter-groups
+	(quote (("default"
+		("dired" (mode . dired-mode))
+		("erc" (mode . erc-mode))
+		("internet" (or
+			     (mode . eww-mode)
+			     (mode . elfeed-mode)
+			     (mode . eaf-mode)))
+		("emacs" (or
+			    (name . "^\\*.*\\*$")))
+		("media" (or
+			  (name . "\\.png")
+			  (name . "\\.jpeg")
+			  (name . "\\.svg"))) ; group by file extension
+		("gnus" (or
+			    (mode . message-mode)
+			    (mode . bbdb-mode)
+			    (mode . mail-mode)
+			    (mode . gnus-group-mode)
+			    (mode . gnus-summary-mode)
+			    (mode . gnus-article-mode)
+			    (name . "^\\.bbdb$")
+			    (name . "^\\.newsrc-dribble")))))))
+    (add-hook 'ibuffer-mode-hook
+	      (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
+)
+  #+end_src
   
 * Opening Files
   Opening files using Dired , opens in the corresponding mode.
@@ -1023,35 +1218,36 @@ paru -S mbsync-git mu
   
   #+begin_src emacs-lisp
 (use-package openwith
+  :custom
+  (openwith-associations
+   (list
+    (list (openwith-make-extension-regexp
+	   '("mpg" "mpeg" "mp3" "mp4"
+	     "avi" "wmv" "wav" "mov" "flv"
+	     "ogm" "ogg" "mkv" "opus" "m4a"))
+	  "mpv --force-window"
+	  '(file))
+    (list (openwith-make-extension-regexp
+	   '("xbm" "pbm" "pgm" "ppm" "pnm"
+	     "png" "gif" "bmp" "tif" "jpeg" "jpg"))
+	  "feh"
+	  '(file))
+    (list (openwith-make-extension-regexp
+	   '("doc" "xls" "ppt" "odt" "ods" "odg" "odp" "docx" "pptx" "xlsx"))
+	  "libreoffice"
+	  '(file))
+    (list (openwith-make-extension-regexp
+	   '("pdf" "djvu"))
+	  "zathura"
+	  '(file))
+    '("\\.lyx" "lyx" (file))
+    '("\\.chm" "kchmviewer" (file))
+    (list (openwith-make-extension-regexp
+	   '("png" "jpeg" "jpg"))
+	  "feh"
+	  '(file))
+    ))
   :config
-  (setq openwith-associations
-	(list
-	 (list (openwith-make-extension-regexp
-		'("mpg" "mpeg" "mp3" "mp4"
-		  "avi" "wmv" "wav" "mov" "flv"
-		  "ogm" "ogg" "mkv" "opus" "m4a"))
-	       "mpv --force-window"
-	       '(file))
-	 (list (openwith-make-extension-regexp
-		'("xbm" "pbm" "pgm" "ppm" "pnm"
-		  "png" "gif" "bmp" "tif" "jpeg" "jpg"))
-	       "feh"
-	       '(file))
-	 (list (openwith-make-extension-regexp
-		'("doc" "xls" "ppt" "odt" "ods" "odg" "odp" "docx" "pptx" "xlsx"))
-	       "libreoffice"
-	       '(file))
-	 (list (openwith-make-extension-regexp
-		'("pdf" "djvu"))
-	       "zathura"
-	       '(file))
-	 '("\\.lyx" "lyx" (file))
-	 '("\\.chm" "kchmviewer" (file))
-	 (list (openwith-make-extension-regexp
-		'("png" "jpeg" "jpg"))
-	       "feh"
-	       '(file))
-	 ))
   (openwith-mode -1)
   )
   #+end_src
@@ -1140,8 +1336,27 @@ To be used by `eww-after-render-hook'."
   "Open a terminal differently depending on whether on project or not"
   (interactive)
   (if (projectile-project-p)
-      (projectile-run-eshell)
-    (shell)))
+      (project-shell)
+    (term "/bin/bash")))
+(setq original-directory "~/.config")
+(setq counter 0)
+(defun custom-new-terminal ()
+  "Open a new terminal if directory changed"
+  (interactive)
+  (if (string= original-directory 'default-directory)
+      (shell)
+    (progn
+      (setq counter (+ counter 1))
+      (setq title (concat "term-" (number-to-string counter)))
+      (setq buf-title (concat "*" title "*"))
+      (message buf-title)
+      (set-buffer (make-term title "/bin/bash"))
+      (term-mode)
+      (term-char-mode)
+      (switch-to-buffer buf-title)
+      )
+    )
+  )
    #+end_src
    
 ** Custom Grep
@@ -1153,7 +1368,7 @@ To be used by `eww-after-render-hook'."
   "Determines if in project or not and calls required grep function"
   (interactive)
   (if (projectile-project-p)
-      (counsel-projectile-grep)
+      (project-find-regexp)
     (counsel-grep)))
    #+end_src
    
@@ -1177,6 +1392,21 @@ To be used by `eww-after-render-hook'."
     (setq url-to-open url)
     (command-execute 'hydra-url/body)
 )
+(defun custom-eaf-open-browser ()
+  "Browser url in EAF Browser"
+  (interactive)
+  (eaf-open-browser url-to-open)
+)
+(defun custom-mpv-hander ()
+  (interactive)
+  (async-shell-command (format "mpv %s" url-to-open))
+  )
+(defun custom-youtube-query ()
+  (interactive)
+  (browse-url (format "https://invidious.kavin.rocks/search?q=%s" (read-string "Youtube Search: ")))
+  )
+
+
    #+end_src
    
 ** Custom Vsplit
@@ -1197,7 +1427,8 @@ To be used by `eww-after-render-hook'."
   "Custom vpslit with focus going to split"
   (interactive)
   (evil-window-split)
-  (evil-window-down 1))
+  (evil-window-down 1)
+)
 
    #+end_src
    
@@ -1208,8 +1439,10 @@ To be used by `eww-after-render-hook'."
   "Determines if in project or not and calls required find-file function"
   (interactive)
   (if (projectile-project-p)
-      (counsel-projectile-find-file)
-    (counsel-find-file)))
+      (project-find-file)
+    (command-execute 'find-file)
+    )
+)
    #+end_src
    
 ** Custom Occur
@@ -1233,8 +1466,9 @@ To be used by `eww-after-render-hook'."
   "Determines if in project or not and calls required find-file function"
   (interactive)
   (if (projectile-project-p)
-      (counsel-projectile-switch-to-buffer)
-    (counsel-switch-buffer)))
+      (project-switch-project)
+    (command-execute 'switch-to-buffer))
+)
    #+end_src
    
 ** Custom Dired
@@ -1244,8 +1478,8 @@ To be used by `eww-after-render-hook'."
   "Calls dired depending if in project or not"
   (interactive)
   (if (projectile-project-p)
-      (projectile-find-dir)
-    (dired (read-directory-name "Dired (directory):"))))
+      (project-find-dir)
+    (dired (read-directory-name "Dired (directory): "))))
 
    #+end_src
 ** Custom Elfeed Back
@@ -1285,10 +1519,20 @@ To be used by `eww-after-render-hook'."
  )
  
    #+end_src
+** Custom CRUX Open With
+   This provides the ~t~ argument to the ~crux-open-with~ function , which prompts for the program to open the file in.
+   #+begin_src emacs-lisp
+(defun custom-crux-open-with ()
+  "CRUX Open with for files"
+  (interactive)
+  (crux-open-with t)
+  )
+   #+end_src
 ** Custom Counsel Functions
    These functions provide custom counel commands.
    These range from opening commands to changing wallpaper
-*** Counsel ConfigEdit
+   Edit: Although this was the case , I switched to completing-read for better integration with native-emacs.
+*** Complete ConfigEdit
     #+begin_src emacs-lisp
 (setq config-dict '(
 		    (alacritty . "~/.config/alacritty/alacritty.yml")
@@ -1298,48 +1542,81 @@ To be used by `eww-after-render-hook'."
 		    (dunst . "~/.config/dunst/dunstrc")
 		    (xmobar . "~/.config/xmobar/xmobarrc")
 		    ))
-(defun counsel-confedit ()
+(defun custom-confedit ()
   "Edit a config file"
   (interactive)
-  (ivy-read "Edit Config: "
-	    (mapcar 'car (car ( list config-dict)))
-	    :action (lambda (x)
-		      (find-file (alist-get (intern x) config-dict)))))
-*** Counsel Terminal
+  (find-file (alist-get (intern (completing-read "Edit Config: " (mapcar 'car (car (list config-dict))))) config-dict)))
+
+
+#+end_src
+*** Complete Select Theme
 #+begin_src emacs-lisp
-(defun counsel-terminal ()
-  "Run a command in a terminal"
+(defun custom-list-of-themes ()
+  "Get a list of themes"
+  (let ((suffix "-theme\\.el\\'")
+        themes)
+    (dolist (dir (custom-theme--load-path))
+      (dolist (file (and (file-directory-p dir)
+                         (directory-files dir nil suffix)))
+        (let ((theme (intern (substring file 0 (string-match-p suffix file)))))
+          (and (custom-theme-name-valid-p theme)
+               (not (memq theme themes))
+               (push theme themes)))))
+    (nreverse themes)))
+(defun custom-select-theme ()
+  "Select a theme"
   (interactive)
-  (ivy-read "Launch in terminal: "
-	    (list "cava" "nmtui" "nvtop" "top" "ncmpcpp" "pulsemixer" "tremc")
-	    :action (lambda (x)
-		      (async-shell-command (format "alacritty -e %s" x))))
+  (setq theme-selection(intern (completing-read "Choose a theme: " (custom-list-of-themes) )))
+  (mapc #'disable-theme (custom-list-of-themes))
+  (load-theme theme-selection t)
+  )
+#+end_src 
+*** Complete Terminal
+#+begin_src emacs-lisp
+(defun custom-terminal-app ()
+  "Select Terminal Apps"
+  (interactive)
+  (setq terminal-list (list "cava" "nvtop" "top" "ncmpcpp" "mmtc" "btm" "pulsemixer" "tremc"))
+  (async-shell-command (format "alacritty -e %s" (completing-read "Select App:" terminal-list)))
 )
 
 #+end_src
 
-    #+end_src
-*** Counsel Run Command
-    #+begin_src emacs-lisp
-(defun counsel-run-command ()
-  "Run a command"
-  (interactive)
-  (ivy-read "Run Command: "
-	    (split-string (shell-command-to-string "dmenu_path"))
-	    :action (lambda (x)
-		      (async-shell-command x)))
-)
-    #+end_src
 *** Counsel Wallpaper
     #+begin_src emacs-lisp
-(setq wallpaper-directory "~/.config/wallpaper/wallpapers")
-(defun counsel-wallpaper ()
+(defun custom-select-wallpaper ()
   "Change wallpaper"
   (interactive)
-  (ivy-read "Choose Wallpaper: "
-	    (directory-files wallpaper-directory)
-	    :action (lambda (x)
-		      (async-shell-command (format "feh --no-fehbg --bg-fill %s/%s" wallpaper-directory x)))))
+  (setq wallpaper-directory "~/.config/wallpaper/wallpapers")
+  (async-shell-command (format "feh --no-fehbg --bg-fill %s/%s" wallpaper-directory (completing-read "Choose file: " (directory-files wallpaper-directory)))))
+    #+end_src
+*** Complete RecentF
+    #+begin_src emacs-lisp
+(defun custom-recentf-candidates ()
+  "Return recent files"
+  (if (and counsel-recentf-include-xdg-list
+           (>= emacs-major-version 26))
+      (delete-dups
+       (sort (nconc (mapcar #'substring-no-properties recentf-list)
+                    (counsel--recentf-get-xdg-recent-files))
+             (lambda (file1 file2)
+               (cond ((file-remote-p file1)
+                      nil)
+                     ((file-remote-p file2))
+                     (t
+                      ;; Added in Emacs 26.1.
+                      (declare-function file-attribute-access-time "files"
+                                        (attributes))
+                      (time-less-p (file-attribute-access-time
+                                    (file-attributes file2))
+                                   (file-attribute-access-time
+                                    (file-attributes file1))))))))
+    (mapcar #'substring-no-properties recentf-list)))
+(defun custom-select-recentf ()
+  "Find a file on `recentf-list'."
+  (interactive)
+  (find-file (completing-read "Recentf: " (custom-recentf-candidates)))
+  )
     #+end_src
 * Keybindings
   Keybindings are the most wonderful aspect of the Emacs text editor.
@@ -1428,7 +1705,8 @@ Frames: _f_rame new  _df_ delete
   "Browse URL"
   ("e" custom-open-eww "eww")
   ("b" custom-browse-url-generic "external browser")
-  ("r" custom-reddigg-url "reddigg")
+  ("m" custom-mpv-handler "Open with MPV")
+  ("r" custom-reddigg-url "Open in Reddigg")
 )
 
     #+end_src
@@ -1482,14 +1760,14 @@ Frames: _f_rame new  _df_ delete
  :states '(normal visual)
  :keymaps 'override
  :prefix "SPC"
-  ";" '(counsel-M-x :which-key "Execute a Command")
+  ";" '(execute-extended-command :which-key "Execute a Command")
   ">" '(evil-next-buffer :which-key "Move to Next Buffer")
   "<" '(evil-prev-buffer :which-key "Move to Prev Buffer")
-  "/" '(counsel-grep :which-key "Grep in Current Buffer")
+  "/" '(consult-line :which-key "Grep in Current Buffer")
   "." '(find-file :which-key "Find File")
   "!" '(shell-command :which-key "Execute Shell Command")
   "&" '(async-shell-command :which-key "Execute Shell Command Async")
-  "RET" '(counsel-bookmark :which-key "Browse Bookmarks")
+  "RET" '(bookmark-jump :which-key "Browse Bookmarks")
 )
    #+end_src
 
@@ -1504,11 +1782,13 @@ Frames: _f_rame new  _df_ delete
  "b" '(:ignore t :which-key "Buffer")
  "bn" '(evil-next-buffer :which-key "Switch to next buffer")
  "bp" '(evil-prev-buffer :which-key "Switch to prev buffer")
- "bb" '(counsel-switch-buffer :which-key "Switch to Buffer")
+ "bb" '(switch-to-buffer :which-key "Switch to Buffer")
  "br" '(rename-buffer :which-key "Rename buffer")
  "bd" '(evil-delete-buffer :which-key "Delete Buffer")
  "bi" '(ibuffer :which-key "Open Ibuffer")
  "bR" '(read-only-mode :which-key "Toggle Read Only Mode")
+ "bs" '(crux-create-scratch-buffer :which-key "Make a new scratch buffer")
+ "bw" '(switch-to-buffer-other-window :which-key "Switch to buffer in other window")
  )
     #+end_src
 
@@ -1519,12 +1799,16 @@ Frames: _f_rame new  _df_ delete
  :keymaps 'override
  :prefix "SPC"
  "f" '(:ignore t :which-key "Files")
- "ff" '(counsel-find-file :which-key "Find Files Interactively")
+ "ff" '(find-file :which-key "Find Files Interactively")
  "fs" '(save-buffer :which-key "Save Current Buffer")
- "fr" '(counsel-recentf :which-key "Find Recent Files")
+ "fS" '(save-some-buffers :which-key "Save Current Buffer")
+ "fr" '(consult-recent-file :which-key "Find Recent Files")
  "fR" '(rename-file :which-key "Rename File")
  "fC" '(copy-file :which-key "Copy File")
- "fl" '(counsel-locate :which-key "Locate File")
+ "fl" '(locate :which-key "Locate File")
+ "fo" '(custom-crux-open-with :which-key "Locate File")
+ "fh" '(find-file :which-key "Locate File")
+ "fw" '(find-file-other-window :which-key "Find File Other Window")
 )
     #+end_src
 
@@ -1535,18 +1819,22 @@ Frames: _f_rame new  _df_ delete
  :keymaps 'override
  :prefix "SPC"
  "t" '(:ignore t :which-key "Toggle")
- "tt" '(custom-terminal :which-key "Toggle Terminal")
+ "tt" '(shell :which-key "Toggle Terminal")
  "tn" '(display-line-numbers-mode :which-key "Toggle Line Numbers")
  "tk" '(which-key-mode :which-key "Toggle Which Key")
  "ta" '(company-mode :which-key "Toggle Autocompletion")
- "tm" '(menu-bar-mode :which-key "Toggle Menu Bar")
+ "tA" '(global-company-mode :which-key "Toggle Autocompletion")
+ "tM" '(menu-bar-mode :which-key "Toggle Menu Bar")
  "tf" '(auto-fill-mode :which-key "Toggle Whitespace mode")
  "ti" '(electric-indent-local-mode :which-key "Toggle Auto Indenting")
  "tl" '(hl-line-mode :which-key "Toggle Line Hightlight")
  "tf" '(flymake-mode :which-key "Toggle Flymake")
  "tF" '(text-scale-adjust :which-key "Toggle font sizes")
  "tp" '(electric-pair-local-mode :which-key "Toggle Pairing")
+ "tP" '(electric-pair-mode :which-key "Toggle Pairing")
  "tw" '(whitespace-mode :which-key "Toggle Whitespace Mode")
+ "ts" '(consult-theme :which-key "Toggle Whitespace Mode")
+ "tm" '(custom-music-toggle :which-key "Toggle Music")
 )
     #+end_src
 
@@ -1587,21 +1875,22 @@ Frames: _f_rame new  _df_ delete
  :keymaps 'override
  :prefix "SPC"
  "p" '(:ignore t :which-key "Projects")
- "pp" '(counsel-projectile-switch-project :which-key "Switch Project")
- "pc" '(projectile-compile-project :which-key "Compile Project")
- "pt" '(projectile-test-project :which-key "Test Project")
- "pf" '(counsel-projectile-find-file :which-key "Find File in Project")
- "ps" '(counsel-projectile-grep :which-key "Grep in your Project")
+ "pp" '(project-switch-project :which-key "Switch Project")
+ "pc" '(project-compile :which-key "Compile Project")
+ ;; "pt" '(projectile-test-project :which-key "Test Project")
+ "pf" '(project-find-file :which-key "Find File in Project")
+ "ps" '(project-search :which-key "Grep in your Project")
  "pr" '(projectile-run-project :which-key "Run Project")
- "pk" '(projectile-kill-buffers :which-key "Kill all Project buffers")
- "p&" '(projectile-run-async-shell-command-in-root :which-key "Run Command Async in Project")
- "p!" '(projectile-run-command-in-root :which-key "Run Command in Project")
- "pd" '(projectile-find-dir :which-key "Open Dired on Project Root")
- "pg" '(projectile-find-tags :which-key "Find Tags in Project")
- "p%" '(projectile-replace-regexp :which-key "Replace Name in Project")
- "p'" '(projectile-run-term :which-key "Run Term in Root of Project")
+ "pb" '(project-switch-to-buffer :which-key "Switch to Buffer in Project")
+ "pk" '(project-kill-buffers :which-key "Kill all Project buffers")
+ "p&" '(project-async-shell-command :which-key "Run Command Async in Project")
+ "p!" '(project-shell-command :which-key "Run Command in Project")
+ "pd" '(project-dired :which-key "Open Dired on Project Root")
+ ;; "pg" '(projectile-find-tags :which-key "Find Tags in Project")
+ ;; "p%" '(projectile-replace-regexp :which-key "Replace Name in Project")
+ "p'" '(project-shell :which-key "Run shell in Root of Project")
 )
-    #+end_src
+#+end_src
     
 *** Dired
     #+begin_src emacs-lisp
@@ -1611,7 +1900,7 @@ Frames: _f_rame new  _df_ delete
  :prefix "SPC"
  "d" '(:ignore t :which-key "Dired")
  "dk" '(kill-dired-buffers :which-key "Kill Dired Buffers")
- "dd" '(custom-dired :which-key "Open Dired")
+ "dd" '(dired :which-key "Open Dired")
 )
     #+end_src
     
@@ -1657,6 +1946,9 @@ Frames: _f_rame new  _df_ delete
  :prefix "SPC"
  "ll" '(lsp :which-key "Start/Connect with LSP Server")
  "l." '(hydra-lsp/body :which-key "LSP Transient State")
+ "li" '(lsp-organize-imports :which-key "LSP Organize imports")
+ "lf" '(lsp-format-buffer :which-key "Lsp Format Buffer")
+ "lr" '(lsp-rename :which-key "Lsp Rename")
  )
     #+end_src
     
@@ -1668,8 +1960,9 @@ Frames: _f_rame new  _df_ delete
  :prefix "SPC"
  "s" '(:ignore t :which-key "Search")
  "sg" '(grep-find :which-key "Search Using Grep Recursively")
- "ss" '(custom-grep :which-key "Search Using Grep")
- "so" '(custom-occur :which-key "Search Using Occur")
+ "ss" '(grep :which-key "Search Using Grep")
+ "so" '(occur :which-key "Search Using Occur")
+ "sr" '(consult-ripgrep :which-key "Search Using Occur")
 )
     #+end_src
     
@@ -1682,11 +1975,16 @@ Frames: _f_rame new  _df_ delete
  :prefix "SPC"
  "o" '(:ignore t :which-key "Open Applications")
  "oo" '(openwith-mode :which-key "Toggle OpenWith Mode")
- "or" '(reddigg-view-main :which-key "Open Reddit")
+ "or" '(re-builder :which-key "Open Reddit")
  "oa" '(org-agenda :which-key "Org Agenda")
  "om" '(mpc :which-key "Open Simple MPC")
  "ob" '(eww :which-key "Open Browser")
+ "oB" '(eaf-open-browser :which-key "Open Browser")
  "oM" '(mu4e :which-key "Open Mu4e")
+ "og" '(custom-googler :which-key "Open EWW")
+ "oc" '(org-capture :which-key "Open Org-Capture")
+ "ot" '(term :which-key "Open Terminal")
+ "oi" '(erc-tls :which-key "Open IRC")
 )
     #+end_src
      
@@ -1711,11 +2009,12 @@ Frames: _f_rame new  _df_ delete
  :states '(normal visual)
  :prefix "SPC"
  "j" '(:ignore t :which-key "Jump")
- "ji" '(counsel-semantic-or-imenu :which-key "Jump to tag using Imenu")
+ "ji" '(imenu :which-key "Jump to tag using Imenu")
  "jl" '(link-hint-open-link :which-key "Jump to link")
  "jw" '(ace-window :which-key "Jump to Window")
  "jn" '(next-error :which-key "Jump to next error")
  "jp" '(previous-error :which-key "Jump to next error")
+ "jc" '(link-hint-copy-link :which-key "Copy given link")
  )
     #+end_src
     
@@ -1758,8 +2057,15 @@ Frames: _f_rame new  _df_ delete
  "mid" '(python-skeleton-def :which-key "Insert def skeleton")
  "mit" '(python-skeleton-try :which-key "Insert try skeleton")
  "miw" '(python-skeleton-while :which-key "Insert while skeleton")
- "mj" '(counsel-imenu :which-key "Jump to definition")
+ "mj" '(imenu :which-key "Jump to definition")
  )
+(general-define-key
+ :states '(normal visual)
+ :keymaps 'python-mode-map
+ "M-j" '(python-nav-forward-defun :which-key "Move to next function")
+ "M-k" '(python-nav-backward-defun :which-key "Move to previous function")
+ )
+
     #+end_src
     
 *** Org Mode
@@ -1794,7 +2100,9 @@ Frames: _f_rame new  _df_ delete
  "l" 'dired-find-file
  "." 'dired-hide-dotfiles-mode
  "V" 'dired-mark
- )
+ "G" 'end-of-buffer
+ "gg" 'beginning-of-buffer
+)
     #+end_src
     
 *** Elfeed Mode
@@ -1834,7 +2142,7 @@ Frames: _f_rame new  _df_ delete
  "md" '(eval-defun :which-key "evaluate defun")
  "mb" '(eval-buffer :which-key "evaluate buffer")
  "mr" '(eval-region :which-key "evaluate region")
- "mj" '(counsel-imenu :which-key "Imenu Mode")
+ "mj" '(imenu :which-key "Imenu Mode")
  )
     #+end_src
 
@@ -1906,21 +2214,117 @@ Frames: _f_rame new  _df_ delete
  "f" 'link-hint-open-link
 )
     #+end_src
+*** Org Agenda Mode
+*** Shell Mode
+    #+begin_src emacs-lisp
+    #+end_src
 * Misc Packages or Non-Structured Data
 
   #+begin_src emacs-lisp
 ;; Force OpenWith mode to close
 (openwith-mode -1)
-(setq ivy-re-builders-alist
-      '((t . ivy--regex-ignore-order))
+(scroll-bar-mode -1)
+  #+end_src
+
+  #+begin_src emacs-lisp
+  #+end_src
+
+
+  #+begin_src emacs-lisp
+(use-package pdf-tools)
+  #+end_src
+
+
+  #+begin_src emacs-lisp
+;; (use-package eaf
+;;   :load-path "~/.config/emacs/emacs-application-framework"
+;;   :custom
+;;   (eaf-browser-enable-adblocker t)
+;;   (eaf-browser-default-search-engine "google")
+;;   (eaf-browser-blank-page-url "https://draculatheme.com")
+  
+;; )
+;; (require 'eaf-browser)
+ 
+  #+end_src
+
+
+  #+begin_src emacs-lisp
+  #+end_src
+
+  #+begin_src emacs-lisp
+(defun custom-googler ()
+  "Google something"
+  (interactive)
+  (let ((query (read-string "Search for: ")))
+    (eaf-open-browser (format "https://google.com/search?q=%s" query)))
+	)
+  #+end_src
+
+  
+  #+begin_src emacs-lisp
+  #+end_src
+  #+begin_src emacs-lisp
+(defun custom-music-next ()
+"Play the next music in MPD"
+  (interactive)
+(shell-command "mpc next")
 )
+(defun custom-music-prev ()
+"Play the next music in MPD"
+  (interactive)
+(shell-command "mpc prev")
+)
+(defun custom-music-toggle ()
+"Play the next music in MPD"
+  (interactive)
+(shell-command "mpc toggle")
+)
+(defun custom-music-toggle ()
+"Play the next music in MPD"
+  (interactive)
+(shell-command "mpc toggle")
+)
+(general-define-key
+ :prefix "SPC"
+ :keymaps 'override
+ :states 'normal
+ "M" '(:ignore t :which-key "Music")
+ "Mn" '(custom-music-next :which-key "Next Song")
+ "Mp" '(custom-music-prev :which-key "Prev Song")
+ )
   #+end_src
-  #+begin_src emacs-lisp
-(use-package reddigg)
-(use-package md4rd)
-  #+end_src>
-  #+begin_src emacs-lisp
-  #+end_src
+
+
+
   
 
- 
+  #+begin_src emacs-lisp
+
+  #+end_src
+  #+begin_src emacs-lisp
+(setq lsp-enabled-clients nil)
+  #+end_src
+  #+begin_src emacs-lisp
+  #+end_src
+
+  #+begin_src emacs-lisp
+(use-package yasnippet)
+(general-define-key
+ :states 'insert
+ "M-/" 'yas-expand
+ )
+  #+end_src
+  #+begin_src go
+fmt.Println("Hello World")
+
+  #+end_src
+
+
+  #+begin_src emacs-lisp
+(use-package consult) 
+  #+end_src
+  
+  #+begin_src emacs-lisp
+(use-package reddigg)
+  #+end_src

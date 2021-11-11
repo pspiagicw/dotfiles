@@ -1,3 +1,0 @@
-#!/bin/sh
-wifiname=`nmcli | head -1 | awk '{ print $4}'`
-echo $wifiname

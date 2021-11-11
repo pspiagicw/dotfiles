@@ -1,0 +1,25 @@
+Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , borderColor = "#bd93f9"
+       , bgColor = "#282a36"
+       , fgColor = "#f8f2f2"
+       , borderWidth = 0
+       , border = BottomB
+       , alpha = 255
+       , position = Bottom
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/pspiagicw/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [
+       	 	  Run TopProc ["-t" , "<name1>(<cpu1>) | <name2> | <name3>"] 60,
+		  Run TopMem ["-t" , "<name3>(<mem3>) | <name2>(<mem2>) | <name1>(<mem1>)" , "-L" , "50" ] 60
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " %top% } { %topmem% "
+       }

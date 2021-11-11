@@ -16,15 +16,4 @@
 #
 #xfce-mcs-manager &
 
-picom -b &
-feh --no-fehbg --bg-scale ~/.config/wallpaper/wallpaper.png &
-alacritty &
-emacs --daemon
-killall transmission-daemon; transmission-daemon &
-xss-lock slock &
-killall mpd ; mpd &
-dunst &
-unclutter &
-setxkbmap -option ctrl:nocaps &
-xmobar ~/.config/xmobar/xmobarrc-openbox
-pytyle1x
+tint2 &

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+
+DMENU='dmenu -i'
+choice=$(echo -e "track\nlong\nshort" | $DMENU )
+
+trackfunc() {
+    xdotool key --delay 500 --clearmodifiers --window $(xdotool search 'Need') KP_4 KP_4 KP_4 KP_4 KP_6 KP_2 KP_2 KP_6 KP_6 KP_2 KP_2 KP_6
+}
+case "$choice" in
+track) trackfunc ;;
+long) longfunc ;;
+esac

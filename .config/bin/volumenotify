@@ -1,0 +1,16 @@
+#!/bin/sh
+
+volume=`get-volume-percent --integer`
+echo $volume
+if [ $volume -eq 0 ]
+then
+    notify-send --icon ~/.config/dunst/mute.png --expire-time=450 -h int:value:$volume --urgency=normal "Volume"
+elif [ $volume -le 50 ]
+then
+    notify-send --icon ~/.config/dunst/volume-low.png --expire-time=450 -h int:value:$volume --urgency=normal "Volume"
+else
+    notify-send --icon ~/.config/dunst/volume-high.png --expire-time=450 -h int:value:$volume --urgency=normal "Volume"
+fi
+   
+
+ 

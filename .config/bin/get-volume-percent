@@ -2,6 +2,22 @@
 
 volume=`pactl get-sink-volume $(pactl get-default-sink) | awk '{ print $12 }'`
 intperc=${volume::-1}
+if [ "$1" = "--simple" ]
+then
+	echo "${intperc}"
+	exit 0 
+fi
+    
+if [ "$1" = "--integer" ]
+then
+    if [ "$2" = "--icon" ]
+    then
+	echo "~/.config/dunst/volume.png\n${intperc}"
+    else
+	echo "${intperc}%"
+    fi
+    exit 0
+fi
 if [ $intperc -le 40 ]
 then
     echo "<fc=#50fa7b>$volume</fc>"

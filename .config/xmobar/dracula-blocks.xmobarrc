@@ -1,0 +1,38 @@
+Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
+	    , "xft:Font Awesome 5 Free Solid:pixelsize=12"
+	    , "xft:Font Awesome 5 Brands:pixelsize=12"
+	    ]
+       , borderColor = "#282a36"
+       , bgColor = "#282a36"
+       , fgColor = "#f8f2f2"
+       , borderWidth = 2
+       , border = BottomB
+       , alpha = 255
+       , position = Top
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/pspiagicw/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","#282a36,#50fa7b","--high","#000000,#50fa7b","--low","#282a36,#50fa7b","--template","<fc=#282a36,#50fa7b><total>%</fc>"] 100
+                    , Run Memory ["--template","<fc=#282a36,#ffb86c> <used> MB </fc>","-L","3","-H","50","--low","#282a36,#ffb86c","--normal","#282a36,#ffb86c","--high","#282a36,#ffb86c"] 100
+                    , Run Date "<fc=#282a36,#ff79c6> %H:%M </fc>" "date" 100
+                    , Run Battery ["--template","<fc=#282a36,#bd93f9> <left>% <acstatus> </fc>","-L","15","-H","70","--low","#282a36,#bd93f9","--normal","#282a36,#bd93f9","--high","#282a36,#bd93f9"] 600
+		    , Run MPD ["-t","<fc=#282a36,#ff79c6> <title> (<state>) </fc>"] 10
+                    , Run UnsafeStdinReader
+                    , Run Com "get-wifi-name" ["--lower"] "wifi" 100
+                    , Run ComX "get-volume-percent" ["--integer"] "--MUTE--" "volume" 5
+                    , Run Com "get-cpu-temp" ["--integer"] "cpu_temp" 300
+		    , Run Com "get-gpu-perc" ["--integer"] "gpu_perc" 200
+		    , Run Com "get-gpu-temp" ["--integer"] "gpu_temp" 300
+		    , Run Swap ["--template","<fc=#ff79c6>SWP</fc>: <usedratio>%","-L","15","-H","70","--low","#50fa7b","--normal","#ffb86c","--high","#ff5555"] 600
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " }{ %mpd% <fc=#282a36,#bd93f9> %volume% </fc> <fc=#282a36,#ffb86c> %wifi% </fc> <fc=#282a36,#50fa7b> %cpu% (%cpu_temp%) </fc> <fc=#282a36,#ff5555> %gpu_perc% (%gpu_temp%) </fc> %memory% %battery% %date% "
+       }

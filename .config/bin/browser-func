@@ -1,0 +1,13 @@
+#!/bin/sh
+
+url=$1
+
+if [[ "youtube" == *"$url"* ]]
+   echo "Youtube"
+elif [[ "google" == *"$url"* ]]
+     emacsclient -e '(eww "$1")'
+else
+    qutebrowser "$1"
+       
+
+

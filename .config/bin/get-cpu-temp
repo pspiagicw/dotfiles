@@ -1,5 +1,10 @@
 #!/bin/bash
 cores=`sensors | grep Core | awk '{ sum += $3 ; n++} END { if (n>0) print int(sum / n);}'`
+if [ "$1" = "--integer" ]
+then
+    echo "${cores}°C"
+    exit 0
+fi
 if [ $cores -le 45 ]
 then
     echo "<fc=#50fa7b>+${cores}°C</fc>"

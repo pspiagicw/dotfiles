@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ "$1" == "--on" ]
+then
+    touch /tmp/eww-system-toggle
+    eww open system
+elif [ "$1" == "--off" ]
+then
+     rm /tmp/eww-system-toggle
+     eww close system
+else
+    if [ -f /tmp/eww-system-toggle ]
+    then
+	rm /tmp/eww-system-toggle
+	eww close system
+    else
+	touch /tmp/eww-system-toggle
+	eww open system
+    fi
+fi

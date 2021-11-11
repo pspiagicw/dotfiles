@@ -9,7 +9,6 @@ if [ -f ~/.xprofile ]
 then
     source ~/.xprofile
 fi
+#exec awesome
+#exec openbox-session
 exec xmonad
-#exec startxfce4
-
-# exec openbox-session

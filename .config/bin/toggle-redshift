@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "$1" == "--on" ]
+then
+    touch /tmp/redshift-toggle
+    redshift -PO 3400
+elif [ "$1" == "--off" ]
+then
+     rm /tmp/redshift-toggle
+     redshift -PO 5000
+else
+    
+    if [ -f /tmp/redshift-toggle ]
+    then
+	rm /tmp/redshift-toggle
+	redshift -PO 5000
+    else
+	touch /tmp/redshift-toggle
+	redshift -PO 3400
+    fi
+fi

@@ -1,0 +1,3 @@
+#!/bin/sh
+openbox-session
+xmonad

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ "$1" == "--on" ]
+then
+    touch /tmp/eww-apps-toggle
+    eww open apps
+elif [ "$1" == "--off" ]
+then
+     rm /tmp/eww-apps-toggle
+     eww close apps
+else
+    if [ -f /tmp/eww-apps-toggle ]
+    then
+	rm /tmp/eww-apps-toggle
+	eww close apps
+    else
+	touch /tmp/eww-apps-toggle
+	eww open apps
+    fi
+fi

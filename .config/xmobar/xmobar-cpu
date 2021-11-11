@@ -1,0 +1,24 @@
+Config { font = "xft:JetBrains Mono:style=bold:pixelsize=12:antialiasing=true:hinting=true"
+       , borderColor = "#bd93f9"
+       , bgColor = "#282a36"
+       , fgColor = "#f8f2f2"
+       , borderWidth = 0
+       , border = BottomB
+       , alpha = 255
+       , position = Bottom
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "/home/pspiagicw/.config/xmobar/"
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [
+       	 	  Run MultiCpu ["-t", "<fc=#ffb86c><autobar></fc>" , "--bwidth" , "33" , "--align" , "l"] 10
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = " } %multicpu% { "
+       }

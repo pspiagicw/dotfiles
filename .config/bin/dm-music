@@ -20,7 +20,8 @@ findfunc() {
 }
 
 showfunc() {
-    notify-send --urgency=normal "MPD" "$(mpc)"
+    ffmpeg -i "$HOME/music/$(mpc current -f %file%)" -y "/tmp/.music_cover.jpg"
+    notify-send --icon /tmp/.music_cover.jpg --urgency=normal "MPD" "$(mpc)"
 }
     
 case "$choice" in
@@ -31,7 +32,7 @@ update) mpc update ;;
 clear) mpc clear ;;
 playlist) playlistfunc ;;
 find) findfunc ;;
-visualizer) alacritty -e ncmpcpp --screen=visualizer ;;
+visualizer) alacritty -e cava ;;
 consume) mpc consume ; showfunc ;;
 random) mpc random ; showfunc ;;
 repeat) mpc repeat ; showfunc ;;

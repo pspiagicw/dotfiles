@@ -1,6 +1,11 @@
 #!/bin/sh
 perc=`nvidia-smi | grep Default | awk '{ print $13 }'`
 intperc=${perc::-1}
+if [ "$1" = "--integer" ]
+then
+    echo "$intperc%"
+    exit 0
+fi
 if [ $intperc -le 40 ]
 then
     echo "<fc=#50fa7b>$perc</fc>"

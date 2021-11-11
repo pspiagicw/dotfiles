@@ -1,7 +1,7 @@
 #!/bin/bash
 
 primary=eDP1
-secondary=HDMI-1-0
+secondary=HDMI-0
 
 mode=$(dmenu -i -p "Project Mode: "<< EOM
 extend

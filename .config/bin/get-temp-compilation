@@ -1,0 +1,3 @@
+#!/bin/sh
+
+echo "CPU: $(get-cpu-temp --integer) @ $(get-cpu-freq --integer) | GPU: $(get-gpu-temp --integer) @ $(get-gpu-mem --integer) Mem"

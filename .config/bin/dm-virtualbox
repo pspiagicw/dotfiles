@@ -6,8 +6,17 @@ HARDDISK_SIZE=12288
 HARDDISK_TYPE='VDI'
 VIRTUALBOX_LOCATION="/home/pspiagicw/.VirtualBox"
 ISO_DIR="/home/pspiagicw/downloads"
+VMNAME=""
+VIRTUALBOX_ICON="~/.config/dunst/virtualbox.png"
 # echo ${choices[*]}
 
+getvmname() {
+    VMNAME=`echo "${1}" | sed -re 's/"(.*)".*/\1/'`
+    echo $VMNAME
+}
+notifyuser() {
+    notify-send --icon ${VIRTUALBOX_ICON} --urgency=normal "$1" "$2"
+}
 startvm() {
     if [[ $(vboxmanage list vms) = "" ]];
     then
@@ -15,22 +24,21 @@ startvm() {
     else
 	vmchoice=`vboxmanage list vms | dmenu -i -l 10 -p "Choose VM (start)"`
 	vboxmanage startvm $(echo $vmchoice | awk '{ print $NF }')
-	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} started"
+	getvmname "$vmchoice"
+	notifyuser "VirtMenu" "Machine ${VMNAME} started"
     fi
 }
 poweroffvm() {
     if [[ $(vboxmanage list runningvms) = "" ]];
     then
-	notify-send "Oracle Virtualbox" "No Running VM's!"
+	notifyuser "Oracle Virtualbox" "No Running VM's"
     else
 	vmchoice=`vboxmanage list runningvms | dmenu -i -l 10 -p "Choose VM (poweroff)"`
 	vboxmanage controlvm $(echo $vmchoice | awk '{ print $NF }') poweroff
-	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} poweroff"
+	getvmname "$vmchoice"
+	notifyuser "VirtMenu" "Machine ${VMNAME} poweroff"
     fi
 }
-# managevm() {
-#     vmchoice=`vboxmanage list vms | dmenu -i -l 10 -p "Choose VM (manage)"`
-# }
 createvm() {
     vboxname=`echo '' | dmenu -i -p "Name of VM:"`
     vboxtype=`vboxmanage list ostypes | grep ^ID | awk '{ print $2 }'|dmenu -i -l 10 -p "Type of OS"`
@@ -55,7 +63,7 @@ createvm() {
     then
 	VBoxManage modifyvm $vboxname --firmware efi
     fi
-    notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} created!"
+    notifyuser "Oracle Virtualbox" "VM ${vmchoice} created"
 }
 deletevm() {
     vmchoice=`vboxmanage list vms | dmenu -l 10 -p "Choose VM (delete):"| awk '{ print $NF }'`
@@ -68,24 +76,21 @@ deletevm() {
     vboxmanage unregistervm $vmchoice $OPTIONS
 }
 
-# attachiso() {
-#     # echo "Vboxname $1"
-#     pathofiso=`echo '' | dmenu -p "Path of ISO:"`
-# }
 saverunningvm() {
     if [[ $(vboxmanage list runningvms) = "" ]];
     then
-	notify-send "Oracle Virtualbox" "No Running VM's!"
+	notifyuser "Oracle Virtualbox" "No Running VM's"
     else
 	vmchoice=`vboxmanage list runningvms | dmenu -i -l 10 -p "Choose VM (save running)"`
 	vboxmanage controlvm $(echo $vmchoice | awk '{ print $NF }') savestate
-	notify-send --urgency=normal "Oracle VirtualBox" "VM ${vmchoice} poweroff"
+	getvmname $vmchoice
+	notifyuser "Oracle Virtualbox" "Machine ${VMNAME} saved"
     fi
 }
 
 main() {
     pushd $VIRTUALBOX_LOCATION
-    choices=("StartVM" "PoweroffVM" "CreateVM" "DeleteVM" "SaveRunningVM" "ManageVM" "Quit")
+    choices=("startVM" "poweroffVM" "createVM" "deleteVM" "saveRunningVM" "Quit")
     choice=`echo ${choices[*]} | tr ' ' '\n' | dmenu -i -p "Choose Action"`
 
     if [[ "$choice" = ${choices[0]} ]];

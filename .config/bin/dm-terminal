@@ -1,5 +1,5 @@
 #!/bin/sh
 
 DMENU='dmenu -i'
-choice=$(echo -e "cava\nnvtop\ntop\ntremc\npulsemixer\nncmpcpp\nnmtui" | $DMENU)
+choice=$(echo -e "btm\ncava\nnvtop\ntop\ntremc\npulsemixer\nnmtui" | $DMENU)
 alacritty -e $choice

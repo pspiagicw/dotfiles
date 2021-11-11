@@ -1,0 +1,11 @@
+#!/bin/sh
+wifiname=`nmcli | head -1 | awk '{ print $4}'`
+if [ "$1" = "--lower" ]
+then
+    echo "$(echo ${wifiname} | awk '{ print tolower($1) }')"
+elif [ "$1" = "--upper" ]
+then
+    echo "$(echo ${wifiname} | awk '{ print toupper($1) }')"
+else
+    echo $wifiname
+fi

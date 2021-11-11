@@ -15,7 +15,7 @@ if [[ $- != *i* ]] ; then
 fi
 
 # Put your fun stuff here.
-export PATH=$PATH:~/.local/bin:~/.config/bin:~/.local/share/flutter/bin
+export PATH=~/.local/bin:~/.config/bin:~/.local/share/flutter/bin:~/.local/share/go/bin:$PATH
 export MANPATH=$MANPATH:~/.local/share/man
 
 # export BROWSER='qutebrowser'
@@ -32,8 +32,18 @@ export TUIR_URLVIEWER="urlscan"
 # (cat ~/.cache/wal/sequences &)
 
 export LFS=/mnt/lfs
-emacsman() {
-    emacsclient -c -e "(let ((Man-notify-method 'bully)) (man \"$1\"))"
-}
+export ANDROID_SDK_ROOT=~/.local/share/Android/Sdk
+export GOPATH=~/.local/share/go
+export FFF_OPENER="mimi"
+export HUGO_BASE_DIR="~/documents/personalblog"
 
-alias man=emacsman
+
+# Source goto
+[[ -s "/usr/local/share/goto.sh" ]] && source /usr/local/share/goto.sh
+
+
+
+export GREEN="#50fa7b"
+export ORANGE="#ffb86c"
+export RED="#ff5555"
+export WHITE="#f8f8f2"

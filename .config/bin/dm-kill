@@ -12,7 +12,7 @@
 set -euo pipefail
 # Running ps to get running processes and display in dmenu.
 selected="$(ps --user "$(id -u)" -F | \
-            dmenu -i -l 10 -p "Search for process to kill:" "$@" | \
+           dmenu -i -l 10 -p "Search for process to kill:" "$@" | \
             awk '{print $2" "$11}')";
 # Nested 'if' statements.  The outer 'if' statement is what to do
 # when we select one of the 'selected' options listed in dmenu.
