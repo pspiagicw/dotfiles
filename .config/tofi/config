@@ -1,0 +1,13 @@
+width = 100%
+height = 100%
+border-width = 0
+outline-width = 0
+padding-left = 45%
+padding-top = 45%
+result-spacing = 20
+num-results = 5
+# font = "JetBrains Mono"
+# font = /usr/share/fonts/jetbrains-mono/JetBrainsMono-SemiBold.ttf
+font = /home/pspiagicw/.local/share/fonts/Iosevka/IosevkaNerdFontMono-SemiBold.ttf
+font-size = 12
+background-color = #000A
