@@ -1,0 +1,6 @@
+[submodule "neovim"]
+	path = neovim
+	url = git@github.com:pspiagicw/neovim
+[submodule "tmux"]
+	path = tmux
+	url = git@github.com:pspiagicw/tmux
