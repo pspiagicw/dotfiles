@@ -1,0 +1,28 @@
+storeDir = "~/code/dotfiles"
+
+after-backup = []
+
+[backup.bashrc]
+location = "~/.bashrc"
+
+[backup.alacritty]
+location = "~/.config/alacritty"
+
+[backup.dotback]
+location = "~/.config/dotback"
+
+[backup.fuzzel]
+location = "~/.config/fuzzel"
+
+[backup.ghostty]
+location = "~/.config/ghostty"
+
+[backup.hyprland]
+location = "~/.config/hypr"
+
+[backup.waybar]
+location = "~/.config/waybar"
+
+
+
+
