@@ -8,8 +8,8 @@ title = "Alacritty"
 dynamic_title = false
 
 [font]
-normal = { family = "JetBrainsMono Nerd Font Mono", style = "Bold"}
-size = 10
+normal = { family = "CaskaydiaMono Nerd Font Mono", style = "Bold"}
+size = 11
 
 # Source https//github.com/rebelot/kanagawa.nvim
 

@@ -24,5 +24,7 @@ location = "~/.config/hypr"
 location = "~/.config/waybar"
 
 
+[backup.niri]
+location = "~/.config/niri"
 
 

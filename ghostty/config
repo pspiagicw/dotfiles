@@ -37,6 +37,7 @@ cursor-style-blink = false
 shell-integration-features = ssh-env,no-cursor
 working-directory = home
 window-inherit-working-directory = false
+window-decoration = none
 #
 # # Spacing around the equals sign does not matter.
 # # All of these are identical:
