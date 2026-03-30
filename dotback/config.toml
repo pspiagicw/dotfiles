@@ -1,0 +1,25 @@
+
+# A folder to store the backup, it will be created if it does not exist.
+storeDir = "~/.config/dotfiles"
+
+# All commands should be defined by the user.
+# It can be left empty or omitted.
+after-backup = [
+]
+
+# Backup location can also be a file.
+[backup.gitconfig]
+location = "~/.gitconfig"
+
+[backup.niri]
+location = "~/.config/niri"
+
+[backup.ghostty]
+location = "~/.config/ghostty"
+
+[backup.fuzzel]
+location = "~/.config/fuzzel"
+
+[backup.dotback]
+location = "~/.config/dotback"
+
