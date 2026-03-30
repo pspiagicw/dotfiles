@@ -271,7 +271,7 @@ layout {
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
 spawn-at-startup "waybar"
-spawn-at-startup "hyprpaper"
+spawn-sh-at-startup "swaybg --image ~/.config/niri/wallpaper.png"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -332,7 +332,7 @@ window-rule {
 
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
-/-window-rule {
+window-rule {
     match app-id=r#"^org\.keepassxc\.KeePassXC$"#
     match app-id=r#"^org\.gnome\.World\.Secrets$"#
 
@@ -341,6 +341,22 @@ window-rule {
     // Use this instead if you want them visible on third-party screenshot tools.
     // block-out-from "screencast"
 }
+
+
+window-rule {
+
+    match app-id=r#"^com\.mitchellh\.ghostty$"# title=r#"^btop$"#
+    match app-id=r#"^com\.mitchellh\.ghostty$"# title=r#"htop"#
+    match app-id=r#"^com\.mitchellh\.ghostty$"# title=r#"fsel"#
+    match app-id=r#"^org\.gnome\.Nautilus$"#
+    open-floating true
+
+    border {
+        off
+    }
+}
+
+
 
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
